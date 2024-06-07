@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "short_name": "Truth Agent",
+  "name": "Ashley: Truth Agent",
+  "version": "1.0",
+  "description": "Chrome extension to mitigate misinformation",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": ["activeTab", "storage"]
+}
