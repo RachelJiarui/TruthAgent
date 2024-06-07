@@ -1,9 +1,10 @@
 import './App.css';
+import ChatRoom from './chatroom/ChatRoom.js';
 
 function App() {
   return (
     <div className="App">
-      Google Extension!!
+      <ChatRoom />
     </div>
   );
 }
