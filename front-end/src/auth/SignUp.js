@@ -6,17 +6,25 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
-        console.log("User signed up successfully");
-      })
-      .catch((error) => {
-        console.error(error);
-        console.log("User failed to sign in");
-      });
+  const validateEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
+  const handleSignUp = async () => {
+    if (!validateEmail(email)) {
+      setError('Invalid email format');
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+    } catch (error) {
+      setError(error.message);
+      console.error(error);
+    }
   };
 
   return (
@@ -34,6 +42,7 @@ const SignUp = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <button onClick={handleSignUp}>Sign Up</button>
     </div>
   );

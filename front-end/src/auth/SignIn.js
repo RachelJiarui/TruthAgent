@@ -6,17 +6,19 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSignIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
-        console.log("User signed in successfully");
-      })
-      .catch((error) => {
-        console.error(error);
-        console.log("User failed to sign in");
-      });
+  const handleSignIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Set a cookie
+      console.log("User signed in:", user);
+    } catch (error) {
+      setError(error.message);
+      console.error(error);
+    }
   };
 
   return (
@@ -34,6 +36,7 @@ const SignIn = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <button onClick={handleSignIn}>Sign In</button>
     </div>
   );
