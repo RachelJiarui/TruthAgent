@@ -1,5 +1,6 @@
 import './App.css';
 import ChatRoom from './chatroom/ChatRoom.js';
+import Auth from './auth/Auth.js';
 
 function App() {
   return (

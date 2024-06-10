@@ -11,14 +11,14 @@ function ChatRoom() {
     e.preventDefault();
 
     const userMessage = formValue;
-    setMessages(prevMessages => [...prevMessages, { id: Date.now(), msg: userMessage, actor: 'User' }]);
+    setMessages(prevMessages => [...prevMessages, { id: Date.now(), msg: userMessage, actor: 'user' }]);
     
     setFormValue('');
 
     // send message over to AI
     const aiResponse = await getGeminiResp(userMessage);
     if (aiResponse) {
-      setMessages(prevMessages => [...prevMessages, { id: Date.now() + 1, msg: aiResponse, actor: 'AI' }]);
+      setMessages(prevMessages => [...prevMessages, { id: Date.now() + 1, msg: aiResponse, actor: 'ai' }]);
       console.log("retrieved AI response and updated messages list")
     }
 
@@ -27,12 +27,12 @@ function ChatRoom() {
 
   return (
     <>
-      <main>
+      <div className="message-box">
         {messages && messages.map((msg) => (
           <ChatMessage key={msg.id} msg={msg.msg} actor={msg.actor} />
         ))}
         <span ref={dummy}></span>
-      </main>
+      </div>
 
       <form onSubmit={sendMessage}>
         <input
@@ -40,7 +40,7 @@ function ChatRoom() {
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="say something nice"
         />
-        <button type="submit" disabled={!formValue}>🕊️</button>
+        <button type="submit" disabled={!formValue}></button>
       </form>
     </>
   );

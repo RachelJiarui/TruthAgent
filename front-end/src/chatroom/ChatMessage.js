@@ -1,7 +1,8 @@
 
 function ChatMessage({ msg, actor }) {
+  // actor: str ["ai", "user"]
   return (
-    <div className="message-bubble">
+    <div className={`message ${actor === 'user' ? 'user-message' : ''}`}>
       {msg}
     </div>
   );

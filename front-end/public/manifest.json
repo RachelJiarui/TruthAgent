@@ -7,5 +7,12 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["activeTab", "storage", "http://127.0.0.1:5000/"]
+  "permissions": [
+    "activeTab",
+    "storage",
+    "identity"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1/*"
+  ]
 }
