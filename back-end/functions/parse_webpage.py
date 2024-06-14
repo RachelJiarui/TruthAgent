@@ -40,7 +40,7 @@ def parse_webpage(link: str) -> str:
     '''
     Parses link to remove unneccessary tags and properties, leaving just what is defined as
     necessary.
-    :param: Link to the website.
+    :param link: Link to the website.
     :return: String of stripped html.
     '''
     # Get raw HTML from selenium search
@@ -60,7 +60,7 @@ def parse_webpage(link: str) -> str:
 def get_publishing_details(content: str) -> dict:
     '''
     Gets the author, the date of when the content was published and who the publisher is.
-    :param: main content scraped from HTML.
+    :param content: main content scraped from HTML.
     :return: JSON object with the keys being 'author', 'date', and 'publisher'.
     '''
     prompt = "Given this body text from an article, tell me who the author is, the date it was published, and who the publisher of the article is. If there is no author listed, write 'No author'. If there is no date listed, write 'No date'. If there is no publisher listed, write 'No publisher'. Return JSON format with the keys being 'author', 'date', and 'publisher'. Return nothing but this JSON object."
@@ -114,10 +114,9 @@ def investigate_publishing_details(author: str, publisher: str) -> dict:
     scraped_data = {}
     for link in links:
         content = parse_webpage(link)
+        # TODO: Handling CAPTCHA
+        # TODO: Handling places that give you pop up initially that you have to close
         if content:
-            publishing_details = get_publishing_details(content)
-            scraped_data[link] = publishing_details
+            scraped_data[link] = content
 
     return scraped_data
-
-print(investigate_publishing_details("Katie Lannan", "GBH News"))

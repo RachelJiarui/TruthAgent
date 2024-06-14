@@ -4,7 +4,7 @@ from talk_to_gemini import talk_to_gemini
 def process_date(date: str) -> str:
     '''
     Finds how many minutes, hours, days, years it's been since the given date.
-    :param: Date, in any common string format.
+    :param date: date in any common string format.
     :return: String saying how long it's been.
     '''
     now = datetime.now()
