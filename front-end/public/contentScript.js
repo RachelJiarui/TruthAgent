@@ -36,7 +36,7 @@ if (typeof init === "undefined") {
       }
     };
 
-    // Inject CSS for highlighting
+    // TEST START: inject CSS for highlighting
     const style = document.createElement("style");
     style.textContent = `
       .highlight {
@@ -48,6 +48,7 @@ if (typeof init === "undefined") {
 
     // Start the search from the body element
     searchAndWrap(document.body, "Boston");
+    // TEST END
   };
 
   init();
