@@ -20,4 +20,4 @@ def talk_to_gemini(user_prompt: Union[str, None], return_json=False) -> str:
     else:
         response = model.generate_content(user_prompt)
 
-    return response.text
+    return response.text.strip()

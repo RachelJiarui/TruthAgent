@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import json
@@ -55,14 +57,14 @@ def parse_webpage(link: str) -> str:
 
     return stripped_HTML.strip()
 
-def get_publishing_details(content: str) -> str:
+def get_publishing_details(content: str) -> dict:
     '''
     Gets the author, the date of when the content was published and who the publisher is.
     :param: main content scraped from HTML.
     :return: JSON object with the keys being 'author', 'date', and 'publisher'.
     '''
     prompt = "Given this body text from an article, tell me who the author is, the date it was published, and who the publisher of the article is. If there is no author listed, write 'No author'. If there is no date listed, write 'No date'. If there is no publisher listed, write 'No publisher'. Return JSON format with the keys being 'author', 'date', and 'publisher'. Return nothing but this JSON object."
-    return talk_to_gemini(prompt + ": " + content).strip()
+    return json.loads(talk_to_gemini(prompt + ": " + content, True))
 
 
 
@@ -89,22 +91,33 @@ def investigate_publishing_details(author: str, publisher: str) -> dict:
     search_box.send_keys(search_query)
     search_box.send_keys(Keys.RETURN)
 
-    time.sleep(2)
+    # Wait until the search results are loaded
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a")))
+    except Exception as e:
+        print(f"Error waiting for search results: {e}")
+        driver.quit()
+        return {}
 
     links = []
-    results = driver.find_elements(By.CSS_SELECTOR, "a.UWckNb")
+    results = driver.find_elements(By.CSS_SELECTOR, "a[jsname='UWckNb']") # a.UWckNb
     for result in results[:3]:
         links.append(result.get_attribute("href"))
 
     driver.quit()
+
+    # Check if links were found
+    if not links:
+        print("No links found.")
+        return {}
 
     scraped_data = {}
     for link in links:
         content = parse_webpage(link)
         if content:
             publishing_details = get_publishing_details(content)
-            scraped_data[link] = json.loads(publishing_details)
+            scraped_data[link] = publishing_details
 
     return scraped_data
 
-print(investigate_publishing_details("No author", "No publisher"))
+print(investigate_publishing_details("Katie Lannan", "GBH News"))
