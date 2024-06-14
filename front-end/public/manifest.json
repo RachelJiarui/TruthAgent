@@ -7,12 +7,9 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": [
-    "activeTab",
-    "storage",
-    "identity"
-  ],
-  "host_permissions": [
-    "http://127.0.0.1/*"
-  ]
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["activeTab", "storage", "identity", "scripting"],
+  "host_permissions": ["http://127.0.0.1/*", "<all_urls>"]
 }
