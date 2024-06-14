@@ -1,5 +1,5 @@
 from talk_to_gemini import talk_to_gemini
-from parse_webpage import investigate_publishing_details
+from process_publishing import investigate_publishing_details
 
 def process_author(author: str, publisher: str) -> str:
     '''
@@ -17,4 +17,4 @@ def process_author(author: str, publisher: str) -> str:
 
     prompt = "Given this dictionary of webpage contents after searching for an author and publisher, give me a one sentence summary about the author. Now write a sentence about if there are any apparent biases or controversies surrounding the author. Return JSON format with the keys being 'author_summary' and 'author_biases'. Return nothing but this JSON object."
 
-    return talk_to_gemini(prompt + ": " + str(content)).strip()
+    return talk_to_gemini(prompt + ": " + str(content), return_json=True).strip()
