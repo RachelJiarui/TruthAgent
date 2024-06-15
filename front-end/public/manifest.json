@@ -10,6 +10,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["activeTab", "storage", "identity", "scripting"],
+  "permissions": ["activeTab", "storage", "identity", "scripting", "tabs"],
   "host_permissions": ["http://127.0.0.1/*", "<all_urls>"]
 }
