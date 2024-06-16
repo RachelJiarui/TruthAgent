@@ -2,10 +2,12 @@ from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from functions.talk_to_gemini import talk_to_gemini
 from functions.parse_webpage import parse_webpage
+from functions.ai_analysis import ai_analysis
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+# Talk directly with Gemini AI
 @app.route('/gemini_resp', methods=['GET'])
 def gemini_resp():
     # Extract the query parameter from the request
@@ -20,6 +22,7 @@ def gemini_resp():
     }
     return jsonify(response)
 
+# Returns the webpage parsed
 @app.route('/parse_webpage', methods=['GET'])
 def parse_web():
     # Extract URL
@@ -36,6 +39,32 @@ def parse_web():
         "data": result
     }
     return jsonify(response)
+
+# Process of AI reading over shoulder
+# Returns JSON object that follows this structure:
+'''
+{
+	"author": author content,
+	"publisher": publish content,
+	"date": date content,
+	"webpage-annotations": [
+		"red": [sentences]
+		"orange": [sentences]
+		"blue": [sentences]
+	]
+}
+'''
+@app.route('/ai-reading', methods=['GET'])
+def ai_process():
+    # Extract URL
+    url = request.args.get('url')
+    if url != None:
+        result = parse_webpage(url)
+    else:
+        abort(400, "Did not send over string URL to perform AI reading")
+
+    resp = ai_analysis(url)
+    return jsonify(resp)
 
 if __name__ == '__main__':
     app.run(debug=True)
