@@ -8,10 +8,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import json
 import time
+from typing import Union
 
 from bs4 import BeautifulSoup
 
-from talk_to_gemini import talk_to_gemini
+from functions.talk_to_gemini import talk_to_gemini
 
 def get_HTML(link: str) -> str:
     '''

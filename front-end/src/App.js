@@ -1,13 +1,13 @@
-import './App.css';
-import ChatRoom from './chatroom/ChatRoom.js';
-import SignIn from './auth/SignIn.js';
-import SignUp from './auth/SignUp.js';
+import "./App.css";
+import ChatRoom from "./chatroom/ChatRoom.js";
+import StartButton from "./StartButton.js";
+// import SignIn from './auth/SignIn.js';
+// import SignUp from './auth/SignUp.js';
 
 function App() {
   return (
     <div className="App">
-      <SignIn/>
-      <SignUp/>
+      <StartButton />
       <ChatRoom />
     </div>
   );
