@@ -30,12 +30,12 @@ def ai_analysis(url: str) -> dict:
     author = publishing_details["author"]
     date = publishing_details["date"]
     publisher = publishing_details["publisher"]
-    main_content = publishing_details["main_content"]
+    main_idea = publishing_details["main_idea"]
 
     author_analysis = process_author(author, publisher)
     date_analysis = process_date(date)
     publisher_analysis = process_publisher(publisher)
-    other_sources = find_other_sources(main_content)
+    other_sources = find_other_sources(main_idea)
     external_summary = explore_sources(other_sources, webpage_content)
     webpage_annotations_analysis = webpage_annotations(webpage_content)
 

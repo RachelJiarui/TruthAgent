@@ -57,3 +57,12 @@ def parse_webpage(link: str) -> str:
             stripped_HTML += tag.get_text(separator=' ', strip=True) + ' '
 
     return stripped_HTML.strip()
+
+def summarize_content(content: str, prompt="Summarize the content.", number_sentences=1) -> str:
+    '''
+    Summarizes a chunk of text.
+    :param content: Chunk of text.
+    :return: Summarize the text.
+    '''
+    prompt = f'{prompt} Given these rules, summarize the given content into {number_sentences} sentence(s): "{content}"'
+    return talk_to_gemini(prompt)

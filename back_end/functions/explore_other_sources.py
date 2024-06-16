@@ -1,18 +1,84 @@
+import json
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+
+from functions.talk_to_gemini import talk_to_gemini
+from functions.parse_webpage import parse_webpage
+from functions.parse_webpage import summarize_content
 from typing import List
 
-def find_other_sources(main_content: str) -> List[str]:
+def find_other_sources(main_idea: str) -> dict:
     '''
     Given a title or topic, return three other URL of sources that report on that title or topics.
-    :param main_content: Title of topic.
+    :param main_idea: Title of topic.
     :return: List of URLs.
     '''
-    return ["hi"]
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-def explore_sources(urls: List[str], original_webpage_content: str) -> str:
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+
+    search_query = f"{main_idea}"
+    driver.get("https://www.google.com")
+
+    search_box = driver.find_element(By.NAME, "q")
+    search_box.send_keys(search_query)
+    search_box.send_keys(Keys.RETURN)
+
+    # Wait until the search results are loaded
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a")))
+    except Exception as e:
+        print(f"Error waiting for search results: {e}")
+        driver.quit()
+        return {}
+
+    links = []
+    results = driver.find_elements(By.CSS_SELECTOR, "a[jsname='UWckNb']") # a.UWckNb
+    for result in results[:5]:
+        links.append(result.get_attribute("href"))
+
+    driver.quit()
+
+    # Check if links were found
+    if not links:
+        print("No links found.")
+        return {}
+
+    scraped_data = {}
+    for link in links:
+        content = parse_webpage(link)
+        # TODO: Handling CAPTCHA
+        if content:
+            scraped_data[link] = content
+
+    return scraped_data
+
+def explore_sources(source_data: dict, source_content: str) -> str:
     '''
     Given a set of URLs, return a summary of what the three URLs talk about in comparison to the original webpage.
-    :param urls: List of URLs.
-    :param original_webpage_content: The body content of the original webpage.
+    :param source_data: Dictionary of URLs and their scraped content.
+    :param original_content: Source webpage content.
     :return: Summary of what the URLs talk about.
     '''
-    return "hi"
+    summary = summarize_content(str(source_data))
+
+    source_content_summary = summarize_content(source_content)
+
+    # Compare the original content with the scraped content
+    comparison_prompt = f"Compare the sentiment and perspectives between two summaries different webpages. Highlight differences and similarities in the information they suggest is true. The original content is summary is: {source_content_summary}. The scraped content is summary is: {summary}."
+    comparative_summary = talk_to_gemini(comparison_prompt, return_json=False)
+
+    return comparative_summary
+
+
+    # explore_sources(find_other_sources("COVID-19"))

@@ -15,16 +15,16 @@ def get_publishing_details(content: str) -> dict:
     '''
     Gets the author, the date of when the content was published, the main content or title of the content, and who the publisher is.
     :param content: main content scraped from HTML.
-    :return: JSON object with the keys being 'author', 'date', 'main_content', and 'publisher'.
+    :return: JSON object with the keys being 'author', 'date', 'main_idea', and 'publisher'.
     '''
-    prompt = "Given this body text from an article, tell me who the author is, the date it was published, the main content or title of the content, and who the publisher of the article is. If there is no author listed, write 'No author'. If there is no date listed, write 'No date'. If there is no publisher listed, write 'No publisher'. Return JSON format with the keys being 'author', 'date', 'main_content' and 'publisher'. Return nothing but this JSON object."
+    prompt = "Given this body text from an article, tell me who the author is, the date it was published, the main idea or title of the content, and who the publisher of the article is. If there is no author listed, write 'No author'. If there is no date listed, write 'No date'. If there is no publisher listed, write 'No publisher'. Return JSON format with the keys being 'author', 'date', 'main_idea' and 'publisher'. Return nothing but this JSON object."
     return json.loads(talk_to_gemini(prompt + ": " + content, return_json=True))
 
 
 
 def investigate_publishing_details(author: str, publisher: str) -> dict:
     '''
-    Google Search the name of the author and publisher, scrape the HTML from the first three results,
+    Google Search the name of the author and publisher, scrape the HTML from the first five results,
     and return each text in JSON format.
     :param author_name: The name of the author to search.
     :param publisher_name: The name of the publisher to search.
@@ -55,7 +55,7 @@ def investigate_publishing_details(author: str, publisher: str) -> dict:
 
     links = []
     results = driver.find_elements(By.CSS_SELECTOR, "a[jsname='UWckNb']") # a.UWckNb
-    for result in results[:3]:
+    for result in results[:5]:
         links.append(result.get_attribute("href"))
 
     driver.quit()
