@@ -1,5 +1,5 @@
-from talk_to_gemini import talk_to_gemini
-from process_publishing import investigate_publishing_details
+from functions.talk_to_gemini import talk_to_gemini
+from functions.process_publishing import investigate_publishing_details
 
 def process_author(author: str, publisher: str) -> str:
     '''

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from talk_to_gemini import talk_to_gemini
+from functions.talk_to_gemini import talk_to_gemini
 import json
 
 def date_tag(time_since_publish: str) -> str:

@@ -8,8 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
-from talk_to_gemini import talk_to_gemini
-from parse_webpage import parse_webpage
+from functions.talk_to_gemini import talk_to_gemini
+from functions.parse_webpage import parse_webpage
 
 def get_publishing_details(content: str) -> dict:
     '''

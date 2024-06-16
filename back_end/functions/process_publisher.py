@@ -1,5 +1,6 @@
-from talk_to_gemini import talk_to_gemini
+from functions.talk_to_gemini import talk_to_gemini
 
+# This lowkey sucks, ex: Health Helpline, try to use Media Fact Check later down the line
 def process_publisher(publisher: str) -> str:
     '''
     Given a publisher, return some basic information about it, its political leaning, and any red flags.
