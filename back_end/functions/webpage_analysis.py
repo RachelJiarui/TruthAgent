@@ -2,7 +2,11 @@ from typing import Dict, List, ParamSpecArgs, Tuple
 import nltk
 import re
 from nltk.tokenize import sent_tokenize
+import requests
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 nltk.download('punkt')
 
 def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
@@ -53,6 +57,19 @@ def is_red(sentence: str) -> bool:
     # call Fact Check API or a verifiable database
     return True
 
+def check_fact_check_api(query, language_code):
+    api_key = os.getenv('FACT_CHECKER_API_KEY')  # Get the API key from the environment variables
+    if not api_key:
+        raise ValueError("API_KEY not found in environment variables")
+    url = "https://factchecktools.googleapis.com/v1alpha1/claims:search"
+    params = {
+        'query': query,
+        'languageCode': 'en',
+        'key': api_key
+    }
+    response = requests.get(url, params=params)
+    return response.json()
+
 def is_orange(sentence: str) -> bool:
     '''
     Determines if the sentence is worthy of code orange.
@@ -67,3 +84,4 @@ def is_blue(sentence: str) -> bool:
     :param sentence: Sentence to examine.
     :return: True if it is code orange, false if it's not.
     '''
+    return True
