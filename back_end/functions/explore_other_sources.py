@@ -63,19 +63,22 @@ def find_other_sources(main_idea: str) -> dict:
 
     return scraped_data
 
-def explore_sources(source_data: dict, source_content: str) -> str:
+def explore_sources(external_urls_data: dict, original_source_content: str) -> str:
     '''
     Given a set of URLs, return a summary of what the three URLs talk about in comparison to the original webpage.
-    :param source_data: Dictionary of URLs and their scraped content.
+    :param external_urls_data: Dictionary of URLs and their scraped content.
     :param original_content: Source webpage content.
-    :return: Summary of what the URLs talk about.
+    :return: Summary comparing the original source with net sources or "No data available."
     '''
-    summary = summarize_content(str(source_data))
+    summary = summarize_content(str(external_urls_data))
 
-    source_content_summary = summarize_content(source_content)
+    if not summary:
+        return "No data available."
+
+    source_content_summary = summarize_content(original_source_content)
 
     # Compare the original content with the scraped content
-    comparison_prompt = f"Compare the sentiment and perspectives between two summaries different webpages. Highlight differences and similarities in the information they suggest is true. The original content is summary is: {source_content_summary}. The scraped content is summary is: {summary}."
+    comparison_prompt = f"Compare the sentiment and perspectives between two summaries different webpages. Highlight differences and similarities in the information they suggest is true. The original content is summary is: {source_content_summary}. The scraped content is summary is: {summary}. If some of the scraped content agrees with the original content, what are the similarities? If some of the scraped content disagrees with the original content, what are the differences?"
     comparative_summary = talk_to_gemini(comparison_prompt, return_json=False)
 
     return comparative_summary
