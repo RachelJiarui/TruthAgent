@@ -6,6 +6,8 @@ from nltk.tokenize.punkt import PunktBaseClass
 import requests
 from dotenv import load_dotenv
 import os
+from talk_to_gemini import talk_to_gemini
+import json
 
 load_dotenv()
 nltk.download('punkt')
@@ -23,6 +25,7 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
             "Orange": [(sentence, ai_analysis)]
             "Blue": [(sentence, ai_analysis)]
         }
+        Where `sentence` is the sentence in the webpage that needs to be highlighted, and the `ai_analysis` being the AI's reasoning.
     '''
     # Normalize white space
     text = re.sub(r'\s+', ' ', text)
@@ -39,27 +42,38 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
 
     for sentence in sentences:
         # If the sentence is disputed by verifiable facts
-        if is_red(sentence):
-            pass
+        investigate_red = is_red(sentence)
+        if investigate_red[0]:
+            result["Red"].append((sentence, investigate_red[1]))
+            continue
+
         # If the sentence is disputed by other sources the AI finds or by the AI itself
-        elif is_orange(sentence):
-            pass
+        investigate_orange = is_orange(sentence)
+        if investigate_orange[0]:
+            result["Orange"].append((sentence, investigate_orange[1]))
+            continue
+
         # If the sentence contains highly manipulatory wording OR if its politically charged
-        elif is_blue(sentence):
-            pass
+        investigate_blue = is_blue(sentence)
+        if investigate_blue[0]:
+            result["Blue"].append((sentence, investigate_blue[1]))
+            continue
 
     return result
 
-def is_red(sentence: str) -> bool:
+def is_red(sentence: str) -> tuple[bool, str]:
     '''
     Determines if this sentence is worthy of code red, a.k.a it is verifiably false.
     :param sentence: Sentence to examine.
-    :return: True if it is code red, false if it's not.
+    :return: True if it is code red, false if it's not as well as the ai's analysis.
     '''
-    # call Fact Check API or a verifiable database
-    return True
+    # TODO: Do some initial check of whether or not the sentence is actually making a substantial claim or not
+    return check_fact_check_api(sentence)
 
-def check_fact_check_api(query):
+def check_fact_check_api(query: str) -> tuple[bool, str]:
+    '''
+    Calls Google's Fact Check API to verify the query.
+    '''
     api_key = os.getenv('FACT_CHECKER_API_KEY')  # Get the API key from the environment variables
     if not api_key:
         raise ValueError("API_KEY not found in environment variables")
@@ -92,21 +106,33 @@ def check_fact_check_api(query):
           }, ...
     '''
     # go through each claim and check if top
+    loc = response["claims"]
+    for claim in loc:
+        # TODO: Compare relationship between title and the sentence
+        # TODO: If they agree, check textualRating and if it's any variety of false, flag
+        # TODO: If they contradict, check textualRating and if it's any variety of true, flag and return the URL of the article that says it's true
+        pass
 
-print(check_fact_check_api("COVID-19"))
+    return True, "test"
 
-def is_orange(sentence: str) -> bool:
+def is_orange(sentence: str) -> tuple[bool, str]:
     '''
     Determines if the sentence is worthy of code orange.
     :param sentence: Sentence to examine.
-    :return: True if it is code orange, false if it's not.
+    :return: True if it is code orange, false if it's not as well as the ai's analysis.
     '''
-    return True
+    prompt = 'Given a claim, determine if it could be misleading or misinformation. If you believe that it is misinformation, give me a 2 sentence explanation, else respond with "N/A". Give me your response in the form of a JSON object with the following structure: { "is_misinfo": boolean, "explanation": str }.'
+    resp = talk_to_gemini(prompt, return_json=True)
+    resp_json = json.loads(resp)
+    return resp_json["is_misinfo"], resp_json["explanation"]
 
-def is_blue(sentence: str) -> bool:
+def is_blue(sentence: str) -> tuple[bool, str]:
     '''
     Determines if the sentence is worthy of code blue.
     :param sentence: Sentence to examine.
-    :return: True if it is code orange, false if it's not.
+    :return: True if it is code blue, false if it's not as well as the ai's analysis.
     '''
-    return True
+    prompt = 'Given a claim, determine if it is politically charged or highly emotionally manipulative for a user. If you believe that the claim is, give me a 2 sentence explanation, else response with "N/A". Give me your response in the form of a JSON object with the following structure: { "is_political_manipulative": boolean, "explanation": str }.'
+    resp = talk_to_gemini(prompt, return_json=True)
+    resp_json = json.loads(resp)
+    return resp_json["is_political_manipulative"], resp_json["explanation"]

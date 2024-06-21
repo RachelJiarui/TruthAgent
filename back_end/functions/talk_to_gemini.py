@@ -1,6 +1,7 @@
 import google.generativeai as genai
 import os
 from typing import Union
+import json
 
 genai.configure(api_key=os.environ["API_KEY"])
 model = genai.GenerativeModel('gemini-1.5-flash')
@@ -11,8 +12,8 @@ def talk_to_gemini(user_prompt: Union[str, None], return_json=False) -> str:
     Talk to Gemini AI.
     :param:
         user_prompt: What you want to prompt Gemini AI.
-        return_json: Default is set of false. If set true, the model will return a JSON object.
-    :return: Gemini AI response.
+        return_json: Default is set of false. If set true, the model's response will abide by JSON rules that you establish.
+    :return: Gemini AI response, always a string.
     '''
     response = None
     if return_json:
