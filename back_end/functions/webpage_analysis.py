@@ -1,7 +1,8 @@
-from typing import Dict, List, ParamSpecArgs, Tuple
+from typing import Dict, List
 import nltk
 import re
 from nltk.tokenize import sent_tokenize
+from nltk.tokenize.punkt import PunktBaseClass
 import requests
 from dotenv import load_dotenv
 import os
@@ -45,6 +46,7 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
             pass
         # If the sentence contains highly manipulatory wording OR if its politically charged
         elif is_blue(sentence):
+            pass
 
     return result
 
@@ -57,7 +59,7 @@ def is_red(sentence: str) -> bool:
     # call Fact Check API or a verifiable database
     return True
 
-def check_fact_check_api(query, language_code):
+def check_fact_check_api(query):
     api_key = os.getenv('FACT_CHECKER_API_KEY')  # Get the API key from the environment variables
     if not api_key:
         raise ValueError("API_KEY not found in environment variables")
@@ -67,8 +69,31 @@ def check_fact_check_api(query, language_code):
         'languageCode': 'en',
         'key': api_key
     }
-    response = requests.get(url, params=params)
-    return response.json()
+    response = requests.get(url, params=params).json()
+    '''
+    {
+       "claims": [
+          {
+             "text": title,
+             "claimant": publisher,
+             "claimDate": time,
+             "claimReview":[
+                {
+                   "publisher":{
+                      "name": name,
+                      "site": .com url of publisher
+                   },
+                   "url": url of article,
+                   "title": title,
+                   "textualRating": false, mostly false, inaccurate, etc.
+                   "languageCode": "en"
+                }
+             ]
+          }, ...
+    '''
+    # go through each claim and check if top
+
+print(check_fact_check_api("COVID-19"))
 
 def is_orange(sentence: str) -> bool:
     '''
