@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       console.log("Valid URL found: " + tabUrl);
       // Call the Flask API GET endpoint '/parse_webpage', passing in the URL
       fetch(
-        `http://127.0.0.1:5000/parse_webpage?url=${encodeURIComponent(tabUrl)}`,
+        `http://127.0.0.1:5000/ai-reading?url=${encodeURIComponent(tabUrl)}`,
       )
         .then((response) => {
           if (!response.ok) {
@@ -31,9 +31,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
           return response.json();
         })
-        .then((parsedWebpage) => {
-          console.log("Received parsed webpage: " + parsedWebpage);
-          sendResponse({ status: "success", data: parsedWebpage });
+        .then((aiInfo) => {
+          console.log("Received parsed webpage: " + aiInfo);
+          sendResponse({ status: "success", data: aiInfo });
         })
         .catch((error) => {
           console.error("Error fetching parsed webpage:", error);

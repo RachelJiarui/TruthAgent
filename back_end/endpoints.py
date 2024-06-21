@@ -58,13 +58,16 @@ def parse_web():
 def ai_process():
     # Extract URL
     url = request.args.get('url')
+    result = None
     if url != None:
-        result = parse_webpage(url)
+        result = ai_analysis(url)
     else:
         abort(400, "Did not send over string URL to perform AI reading")
 
-    resp = ai_analysis(url)
-    return jsonify(resp)
+    response = {
+        "data": result
+    }
+    return jsonify(response)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 /* global chrome */
 
 function StartButton() {
-  const [parsedWebpage, setParsedWebpage] = useState("");
+  const [aiInfo, setAiInfo] = useState("");
 
   async function handleButtonClick() {
     if (
@@ -15,9 +15,9 @@ function StartButton() {
         { action: "runBackgroundTask" },
         (response) => {
           if (response.status === "success") {
-            const webpageContent = response.data.data;
-            console.log("Parsed webpage data:", webpageContent);
-            setParsedWebpage(webpageContent);
+            const resp = response.data;
+            setAiInfo(resp);
+            console.log("Web info from AI: " + JSON.stringify(aiInfo));
           } else {
             console.log("Error:", response.message);
           }
@@ -32,7 +32,6 @@ function StartButton() {
   return (
     <div>
       <button onClick={handleButtonClick}>Read over my shoulder</button>
-      <p>{parsedWebpage}</p>
     </div>
   );
 }

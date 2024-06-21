@@ -48,4 +48,4 @@ def ai_analysis(url: str) -> dict:
         "webpage_annotations": webpage_annotations_analysis
     }
 
-    return {}
+    return result

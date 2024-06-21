@@ -1,9 +1,11 @@
 import google.generativeai as genai
+from dotenv import load_dotenv
 import os
 from typing import Union
 import json
 
-genai.configure(api_key=os.environ["API_KEY"])
+load_dotenv()
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 model = genai.GenerativeModel('gemini-1.5-flash')
 model_json = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
 
