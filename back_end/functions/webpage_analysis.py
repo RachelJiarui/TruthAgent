@@ -6,7 +6,7 @@ from nltk.tokenize.punkt import PunktBaseClass
 import requests
 from dotenv import load_dotenv
 import os
-from functions.talk_to_gemini import talk_to_gemini
+from talk_to_gemini import talk_to_gemini
 import json
 
 load_dotenv()
@@ -83,7 +83,9 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
         'languageCode': 'en',
         'key': api_key
     }
-    response = requests.get(url, params=params).json()
+
+    response = requests.get(url, params=params)
+    print(f"Raw response content from Fact Check API: {response.content}")
     '''
     {
        "claims": [
@@ -105,15 +107,19 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
              ]
           }, ...
     '''
-    # go through each claim and check if top
-    loc = response["claims"]
-    for claim in loc:
-        # TODO: Compare relationship between title and the sentence
-        # TODO: If they agree, check textualRating and if it's any variety of false, flag
-        # TODO: If they contradict, check textualRating and if it's any variety of true, flag and return the URL of the article that says it's true
-        pass
+    resp_json = json.loads(response.content)
+    if resp_json != {}:
+        # go through each claim and check if top
+        loc = resp_json["claims"]
+        for claim in loc:
+            # TODO: Compare relationship between title and the sentence
+            # TODO: If they agree, check textualRating and if it's any variety of false, flag
+            # TODO: If they contradict, check textualRating and if it's any variety of true, flag and return the URL of the article that says it's true
+            pass
 
     return True, "test"
+
+check_fact_check_api("RAWR")
 
 def is_orange(sentence: str) -> tuple[bool, str]:
     '''

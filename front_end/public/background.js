@@ -21,18 +21,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
 
       console.log("Valid URL found: " + tabUrl);
-      // Call the Flask API GET endpoint '/parse_webpage', passing in the URL
+      // Call the Flask API GET endpoint '/ai-reading', passing in the URL
       fetch(
         `http://127.0.0.1:5000/ai-reading?url=${encodeURIComponent(tabUrl)}`,
       )
         .then((response) => {
+          console.log("1");
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           return response.json();
         })
         .then((aiInfo) => {
-          console.log("Received parsed webpage: " + aiInfo);
+          console.log("Received parsed webpage: " + JSON.stringify(aiInfo));
           sendResponse({ status: "success", data: aiInfo });
         })
         .catch((error) => {

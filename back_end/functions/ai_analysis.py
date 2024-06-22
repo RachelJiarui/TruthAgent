@@ -25,6 +25,7 @@ def ai_analysis(url: str) -> dict:
     	]
    	}
     '''
+    print("Got to ai analysis")
     webpage_content = parse_webpage(url)
     publishing_details = get_publishing_details(webpage_content)
     author = publishing_details["author"]
@@ -47,5 +48,6 @@ def ai_analysis(url: str) -> dict:
         "other_sources_summary": external_summary,
         "webpage_annotations": webpage_annotations_analysis
     }
+    print(f"Finished ai analysis: {result}")
 
     return result

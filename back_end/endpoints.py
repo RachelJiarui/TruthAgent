@@ -56,6 +56,7 @@ def parse_web():
 '''
 @app.route('/ai-reading', methods=['GET'])
 def ai_process():
+    print("Did we get here???")
     # Extract URL
     url = request.args.get('url')
     result = None
