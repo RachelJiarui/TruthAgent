@@ -6,7 +6,7 @@ from nltk.tokenize.punkt import PunktBaseClass
 import requests
 from dotenv import load_dotenv
 import os
-from talk_to_gemini import talk_to_gemini
+from functions.talk_to_gemini import talk_to_gemini
 import json
 
 load_dotenv()
