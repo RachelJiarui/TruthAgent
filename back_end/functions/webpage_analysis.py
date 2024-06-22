@@ -40,7 +40,12 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
         "Blue": []
     }
 
+    # Variables helpful for testing
+    len_sentences = len(sentences)
+    count = -1
     for sentence in sentences:
+        count += 1
+        print(f"Analyzing sentence {count}/{len_sentences}: {sentence}")
         # If the sentence is disputed by verifiable facts
         investigate_red = is_red(sentence)
         if investigate_red[0]:
@@ -85,7 +90,6 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
     }
 
     response = requests.get(url, params=params)
-    print(f"Raw response content from Fact Check API: {response.content}")
     '''
     {
        "claims": [
@@ -108,7 +112,7 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
           }, ...
     '''
     resp_json = json.loads(response.content)
-    if resp_json != {}:
+    if "claims" in resp_json:
         # go through each claim and check if top
         loc = resp_json["claims"]
         for claim in loc:
@@ -117,9 +121,7 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
             # TODO: If they contradict, check textualRating and if it's any variety of true, flag and return the URL of the article that says it's true
             pass
 
-    return True, "test"
-
-check_fact_check_api("RAWR")
+    return False, "test"
 
 def is_orange(sentence: str) -> tuple[bool, str]:
     '''

@@ -50,7 +50,6 @@ def process_date(date: str) -> timedelta:
 
     prompt = f'Given this date in arbitrary format "{date}", please reformat the date as a JSON object with the keys being year, month, day and hour and the value being the appropriate integer values. The year value should always be a four digit number. The month value should always be between 1 and 12. The day value should always be between 1 and 31. The hour value should always be between 0 and 23. Return just the JSON object.'
     resp = talk_to_gemini(prompt, True)
-    print(resp) # test
     publishing_date_dict = json.loads(resp)
 
     # checks

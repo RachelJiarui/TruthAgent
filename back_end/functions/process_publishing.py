@@ -18,7 +18,8 @@ def get_publishing_details(content: str) -> dict:
     :return: JSON object with the keys being 'author', 'date', 'main_idea', and 'publisher'.
     '''
     prompt = "Given this body text from an article, tell me who the author is, the date it was published, the main idea or title of the content, and who the publisher of the article is. If there is no author listed, write 'No author'. If there is no date listed, write 'No date'. If there is no publisher listed, write 'No publisher'. Return JSON format with the keys being 'author', 'date', 'main_idea' and 'publisher'. Return nothing but this JSON object."
-    return json.loads(talk_to_gemini(prompt + ": " + content, return_json=True))
+    resp = talk_to_gemini(prompt + ": " + content, return_json=True)
+    return json.loads(resp)
 
 
 
