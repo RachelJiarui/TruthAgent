@@ -6,7 +6,7 @@ from nltk.tokenize.punkt import PunktBaseClass
 import requests
 from dotenv import load_dotenv
 import os
-from functions.talk_to_gemini import talk_to_gemini
+from talk_to_gemini import talk_to_gemini
 import json
 
 load_dotenv()
@@ -41,28 +41,26 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
     }
 
     # Variables helpful for testing
-    len_sentences = len(sentences)
-    count = -1
-    for sentence in sentences:
-        count += 1
-        print(f"Analyzing sentence {count}/{len_sentences}: {sentence}")
-        # If the sentence is disputed by verifiable facts
-        investigate_red = is_red(sentence)
-        if investigate_red[0]:
-            result["Red"].append((sentence, investigate_red[1]))
-            continue
+    # len_sentences = len(sentences)
+    # count = -1
+    # for sentence in sentences:
+    #     count += 1
+    #     print(f"Analyzing sentence {count}/{len_sentences} for code red: {sentence}")
+    #     # If the sentence is disputed by verifiable facts
+    #     investigate_red = is_red(sentence)
+    #     if investigate_red[0]:
+    #         result["Red"].append((sentence, investigate_red[1]))
 
-        # If the sentence is disputed by other sources the AI finds or by the AI itself
-        investigate_orange = is_orange(sentence)
-        if investigate_orange[0]:
-            result["Orange"].append((sentence, investigate_orange[1]))
-            continue
+    orange_prompt = 'Given some text, identify phrases or sentences from the given text that could be misleading or misinformation. For each phrase or sentence you believe could be misleading or misinformation, and pair it with a 1-2 sentence explanation. Each of these pairings is a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "Orange": List[List[str]]] }. Here is the text: ' + text
+    orange_resp = talk_to_gemini(orange_prompt, return_json=True)
+    print(f"Orange resp: {orange_resp}")
+    orange_json = json.loads(orange_resp)
+    result["Orange"] = orange_json["Orange"]
 
-        # If the sentence contains highly manipulatory wording OR if its politically charged
-        investigate_blue = is_blue(sentence)
-        if investigate_blue[0]:
-            result["Blue"].append((sentence, investigate_blue[1]))
-            continue
+    blue_prompt = 'Given some text, return a list of phrases or sentences from the given text that is politically charged or highly emotionally manipulative for a user. For each phrase or sentence you believe is politically charged or highly emotionally manipulative for a user, pair it with a 1-2 sentence explanation. Each of these pairings is a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "Blue": List[List[str]] }. Here is the text: Here is the text: ' + text
+    blue_resp = talk_to_gemini(blue_prompt, return_json=True)
+    blue_json = json.loads(blue_resp)
+    result["Blue"] = blue_json["Blue"]
 
     return result
 
@@ -123,24 +121,6 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
 
     return False, "test"
 
-def is_orange(sentence: str) -> tuple[bool, str]:
-    '''
-    Determines if the sentence is worthy of code orange.
-    :param sentence: Sentence to examine.
-    :return: True if it is code orange, false if it's not as well as the ai's analysis.
-    '''
-    prompt = 'Given a claim, determine if it could be misleading or misinformation. If you believe that it is misinformation, give me a 2 sentence explanation, else respond with "N/A". Give me your response in the form of a JSON object with the following structure: { "is_misinfo": boolean, "explanation": str }.'
-    resp = talk_to_gemini(prompt, return_json=True)
-    resp_json = json.loads(resp)
-    return resp_json["is_misinfo"], resp_json["explanation"]
-
-def is_blue(sentence: str) -> tuple[bool, str]:
-    '''
-    Determines if the sentence is worthy of code blue.
-    :param sentence: Sentence to examine.
-    :return: True if it is code blue, false if it's not as well as the ai's analysis.
-    '''
-    prompt = 'Given a claim, determine if it is politically charged or highly emotionally manipulative for a user. If you believe that the claim is, give me a 2 sentence explanation, else response with "N/A". Give me your response in the form of a JSON object with the following structure: { "is_political_manipulative": boolean, "explanation": str }.'
-    resp = talk_to_gemini(prompt, return_json=True)
-    resp_json = json.loads(resp)
-    return resp_json["is_political_manipulative"], resp_json["explanation"]
+# TESTING
+webpage_content = '''Since the beginning of the pandemic, key pieces of medical guidance from the World Health Organization have proven to be disastrously false — false enough to cost lives. It was the WHO, you’ll remember, that told us COVID couldn’t be transmitted between people, even as the virus was spreading into the United States. It was the WHO that worked in stealth with the Chinese government to obscure the source of the outbreak at the beginning, and then hide its origins from the world. We’re not attacking the WHO. Those are statements of fact. You’d think. they’d be disqualifying. Just the opposite. For more than a year, the tech monopolies of Silicon Valley have used the World Health Organization’s official statements to determine what American news consumers are allowed to know — and what they should be prohibited from knowing — about COVID. Facebook even announced a formal partnership with the WHO to "bring up to date and accurate information to billions of people. That partnership — between a China-controlled NGO, and the China-beholden tech platforms — continued smoothly until just a few days ago. That’s when bureaucrats at the WHO published new vaccine guidance. Here’s what it says: children should not take the coronavirus vaccine. Why? The drugs are too dangerous. There's not nearly enough data to understand the long-term effects or to show that the benefits are worth the risk that they bring. This is terrible news, of course, for the pharmaceutical industry. Big Pharma has been planning to test the vaccine on six-month-olds. It’s deeply embarrassing for much of the news media, which have taken a break from ginning up hysteria about Russian spies to sell vaccines to their viewers. And above all, it is a shocking repudiation of the American health establishment, which has been relentlessly pushing universal vaccination, including for children. Biden's top coronavirus adviser, Zeke Emanuel, declared that young people should be required to get the shot.'''
+print(webpage_annotations(webpage_content))

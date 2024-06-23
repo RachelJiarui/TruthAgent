@@ -44,7 +44,6 @@ def ai_analysis(url: str) -> dict:
     external_summary = explore_sources(other_sources, webpage_content)
     print("Explored other sources. Analyzing the webpage given webpage content")
     webpage_annotations_analysis = webpage_annotations(webpage_content)
-    print("Finished AI analysis")
 
     result = {
         "author": author_analysis,
