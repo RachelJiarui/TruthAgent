@@ -9,7 +9,6 @@ from selenium.webdriver.common.keys import Keys
 import json
 import time
 from typing import Union
-
 from bs4 import BeautifulSoup
 
 from functions.talk_to_gemini import talk_to_gemini
@@ -28,6 +27,7 @@ def get_HTML(link: str) -> str:
 
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
+    print("Trying to get link...")
     try :
         driver.get(link)
         return driver.page_source
@@ -57,6 +57,11 @@ def parse_webpage(link: str) -> str:
             stripped_HTML += tag.get_text(separator=' ', strip=True) + ' '
 
     return stripped_HTML.strip()
+
+def get_body_content(parsed_webpage: str) -> str:
+    parsed_webpage.replace('"', '')
+    prompt = f"Given all the text on an article on a webpage, remove all text that are advertisements, titles, buttons, and other text that are not relevant to what the article is conveying. Do not change any of the original text, just remove. Here is the webpage text: {parsed_webpage}"
+    return talk_to_gemini(prompt)
 
 def summarize_content(content: str, prompt="Summarize the content.", number_sentences=1) -> str:
     '''
