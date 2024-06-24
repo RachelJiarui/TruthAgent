@@ -55,6 +55,14 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
     orange_resp = talk_to_gemini(orange_prompt, return_json=True)
     print(f"Orange resp: {orange_resp}")
     orange_json = json.loads(orange_resp)
+
+    # Investigate orange flagged sentences
+    for red in orange_json["Orange"]:
+        investigate_red = is_red(red[0])
+        if investigate_red[0]:
+            result["Red"].append((red[0], investigate_red[1]))
+        else:
+            result["Orange"].append(red)
     result["Orange"] = orange_json["Orange"]
 
     blue_prompt = 'Given text, return a list of phrases or sentences from the given text that is politically charged or highly emotionally manipulative for a user. For each phrase or sentence you believe is politically charged or highly emotionally manipulative for a user, pair it with a 1-2 sentence explanation of why you believe so. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "Blue": List[List[str]] }. Here is the text: ' + text
@@ -120,7 +128,10 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
             # TODO: If they contradict, check textualRating and if it's any variety of true, flag and return the URL of the article that says it's true
             pass
 
-    return False, "test"
+        # TODO: Need to create mechanism for returning fact check information so that the annotation can be created. 
+        # Ex. "Flagged for being false by Snopes[URL]"
+
+    return False, "The sentence is not verifiably false."
 
 # TESTING
 webpage_content = '''Since the beginning of the pandemic, key pieces of medical guidance from the World Health Organization have proven to be disastrously false — false enough to cost lives. It was the WHO, you’ll remember, that told us COVID couldn’t be transmitted between people, even as the virus was spreading into the United States. It was the WHO that worked in stealth with the Chinese government to obscure the source of the outbreak at the beginning, and then hide its origins from the world. We’re not attacking the WHO. Those are statements of fact. You’d think. they’d be disqualifying. Just the opposite. For more than a year, the tech monopolies of Silicon Valley have used the World Health Organization’s official statements to determine what American news consumers are allowed to know — and what they should be prohibited from knowing — about COVID. Facebook even announced a formal partnership with the WHO to "bring up to date and accurate information to billions of people. That partnership — between a China-controlled NGO, and the China-beholden tech platforms — continued smoothly until just a few days ago. That’s when bureaucrats at the WHO published new vaccine guidance. Here’s what it says: children should not take the coronavirus vaccine. Why? The drugs are too dangerous. There's not nearly enough data to understand the long-term effects or to show that the benefits are worth the risk that they bring. This is terrible news, of course, for the pharmaceutical industry. Big Pharma has been planning to test the vaccine on six-month-olds. It’s deeply embarrassing for much of the news media, which have taken a break from ginning up hysteria about Russian spies to sell vaccines to their viewers. And above all, it is a shocking repudiation of the American health establishment, which has been relentlessly pushing universal vaccination, including for children. Biden's top coronavirus adviser, Zeke Emanuel, declared that young people should be required to get the shot.'''
