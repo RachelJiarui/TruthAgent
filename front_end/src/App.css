@@ -3,23 +3,17 @@ body {
     margin: 0;
     padding: 0;
     width: 600px;
-    height: 800px;
+    height: 600px;
+    font-size: 13px;
 }
 
-.message-box {
-    height: 88vh;
-    overflow-y: auto;
-    padding: 10px;
-}
-
-form {
+.right-panel form {
     height: 7vh;
     position: fixed;
     bottom: 0;
-    width: 96.5vw;
+    width: 62%;
     max-width: 728px;
     display: flex;
-    font-size: 1.5rem;
     outline: 1.5px solid #000;
     border-radius: 10px;
     margin: 1.5vh;
@@ -35,7 +29,6 @@ form button {
 input {
     line-height: 1.25;
     width: 100%;
-    font-size: 0.9rem;
     border: none;
     padding: 0 20px;
     border-top-left-radius: 10px;
@@ -51,7 +44,6 @@ button {
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
-    font-size: 1rem;
 }
 
 button:disabled {
@@ -74,18 +66,41 @@ p {
     text-align: center;
 }
 
+.message-box {
+    overflow-y: auto;
+    padding-bottom: 7vh;
+    overflow-x: hidden;
+    margin: 20px;
+}
+
 .message {
     display: flex;
     align-items: center;
     color: black;
-    padding: 15px;
-    font-size: 0.9rem;
-    max-width: 300px;
-    margin-bottom: 5px;
+    max-width: 80%;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 .user-message {
     margin-left: auto;
-    background-color: #e0e0e0;
+    background-color: #f0f0f0;
     border-radius: 15px;
+    padding: 15px;
+}
+
+.container {
+    display: flex; /* Use flexbox to arrange items */
+    height: 100vh; /* 100% of the viewport height */
+}
+
+.left-panel {
+    flex: 0 0 35%; /* Flex-grow, flex-shrink, flex-basis */
+    background-color: #f0f0f0; /* Example background color */
+}
+
+.right-panel {
+    flex: 0 0 65%; /* Flex-grow, flex-shrink, flex-basis */
+    overflow-y: auto;
 }

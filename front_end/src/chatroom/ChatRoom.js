@@ -1,36 +1,46 @@
-import React, { useRef, useState } from 'react';
-import ChatMessage from './ChatMessage.js';
-import getGeminiResp from '.././services/getGeminiResp';
+import React, { useRef, useState } from "react";
+import ChatMessage from "./ChatMessage.js";
+import getGeminiResp from ".././services/getGeminiResp";
 
 function ChatRoom() {
   const dummy = useRef();
   const [messages, setMessages] = useState([]);
-  const [formValue, setFormValue] = useState('');
+  const [formValue, setFormValue] = useState("");
 
   const sendMessage = async (e) => {
     e.preventDefault();
 
-    const userMessage = formValue;
-    setMessages(prevMessages => [...prevMessages, { id: Date.now(), msg: userMessage, actor: 'user' }]);
-    
-    setFormValue('');
+    let userMessage = formValue;
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { id: Date.now(), msg: userMessage, actor: "user" },
+    ]);
+
+    setFormValue("");
 
     // send message over to AI
-    const aiResponse = await getGeminiResp(userMessage);
+    const prompt =
+      userMessage +
+      " - Response succinctly, like in a conversation, without any markdown formatting.";
+    const aiResponse = await getGeminiResp(prompt);
     if (aiResponse) {
-      setMessages(prevMessages => [...prevMessages, { id: Date.now() + 1, msg: aiResponse, actor: 'ai' }]);
-      console.log("retrieved AI response and updated messages list")
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { id: Date.now() + 1, msg: aiResponse, actor: "ai" },
+      ]);
+      console.log("retrieved AI response and updated messages list");
     }
 
-    dummy.current.scrollIntoView({ behavior: 'smooth' });
-  }
+    dummy.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
       <div className="message-box">
-        {messages && messages.map((msg) => (
-          <ChatMessage key={msg.id} msg={msg.msg} actor={msg.actor} />
-        ))}
+        {messages &&
+          messages.map((msg) => (
+            <ChatMessage key={msg.id} msg={msg.msg} actor={msg.actor} />
+          ))}
         <span ref={dummy}></span>
       </div>
 

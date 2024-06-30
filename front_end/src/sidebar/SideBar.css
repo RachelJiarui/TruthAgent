@@ -1,0 +1,51 @@
+.side-bar {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    color: grey;
+}
+
+.side-bar-title {
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.context {
+    padding: 10px;
+}
+
+.context-text {
+    font-size: 16px;
+    color: black;
+}
+
+.click-for-more {
+    font-size: 12px;
+    font-style: italic;
+}
+
+.alert {
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.alert:hover {
+    background-color: #d3d3d3;
+}
+
+.select-alert {
+    background-color: #d3d3d3;
+}
+
+.alert-title {
+    font-size: 16px;
+    padding-bottom: 2px;
+}
+
+.learn-more {
+    font-size: 12px;
+}

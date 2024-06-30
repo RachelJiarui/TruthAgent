@@ -1,11 +1,9 @@
-import "./App.css";
-import React, { useState } from "react";
+import "../App.css";
 /* global chrome */
 
-function StartButton() {
-  const [aiInfo, setAiInfo] = useState("");
-
+function StartButton({ setAIAnalysis, setError }) {
   async function handleButtonClick() {
+    setError("Fetching information...");
     if (
       typeof chrome !== "undefined" &&
       chrome.runtime &&
@@ -15,24 +13,24 @@ function StartButton() {
         { action: "runBackgroundTask" },
         (response) => {
           if (response.status === "success") {
-            const resp = response.data;
-            setAiInfo(resp);
-            // console.log("Web info from AI: " + JSON.stringify(aiInfo));
+            const resp = JSON.parse(response.data);
+            console.log("Response: " + resp);
+            setAIAnalysis(resp);
           } else {
             console.log("Error:", response.message);
+            setError(response.message);
           }
         },
       );
     } else {
       const errorMessage = "Chrome runtime is not available";
-      console.log(errorMessage);
+      setError(errorMessage);
     }
   }
 
   return (
     <div>
       <button onClick={handleButtonClick}>Read over my shoulder</button>
-      <p>{aiInfo === "" ? "Loading info" : JSON.stringify(aiInfo)}</p>
     </div>
   );
 }
