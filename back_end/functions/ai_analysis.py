@@ -58,6 +58,69 @@ def ai_analysis(url: str) -> dict:
         "other_sources_summary": external_summary,
         "webpage_annotations": webpage_annotations_analysis
     }
+    result = process_ai_analysis(result, url)[url]
     print(f"Finished ai analysis: {result}")
 
     return result
+
+def process_ai_analysis(raw_ai_analysis: dict, url: str):
+    '''
+    Processes it to be ready for front-end consumption and storage.
+    :param: raw_ai_analysis is a dictionary in the form
+        result = {
+            "author": author_analysis: str,
+            "publisher": publisher_analysis: str,
+            "date": date_analysis: str,
+            "other_sources": other_sources: list[str],
+            "other_sources_summary": external_summary: str,
+            "webpage_annotations": [
+          		"red": [(sentence: str, ai_analysis: str)]
+          		"orange": [(sentence: str, ai_analysis: str)]
+          		"blue": [(sentence: str, ai_analysis: str)]
+           	]
+        }
+    :return: New dict in the form
+        result = {
+            "url": {
+                "author": author_analysis: str,
+                "publisher": publisher_analysis: str,
+                "date": date_analysis: str,
+                "other_sources": other_sources: list[str],
+                "other_sources_summary": external_summary: str,
+                "webpage_annotations": {
+              		"red": [
+                        {
+            				"sentence": sentence: str,
+            				"ai_analysis": ai_analysis: str,
+            				"messages": []
+     			        }, ... for each (sentence: str, ai_analysis: str) in original
+                    ]
+              		"orange": ...
+              		"blue": ...
+                }
+            }
+        }
+    '''
+    processed_analysis = {
+        url: {
+            "author": raw_ai_analysis["author"],
+            "publisher": raw_ai_analysis["publisher"],
+            "date": raw_ai_analysis["date"],
+            "other_sources": raw_ai_analysis["other_sources"],
+            "other_sources_summary": raw_ai_analysis["other_sources_summary"],
+            "webpage_annotations": {}
+        }
+    }
+
+    # Process webpage annotations
+    for color, annotations in raw_ai_analysis["webpage_annotations"].items():
+        processed_analysis[url]["webpage_annotations"][color] = [
+            {
+                "sentence": sentence,
+                "ai_analysis": ai_analysis,
+                "messages": []
+            }
+            for sentence, ai_analysis in annotations
+        ]
+
+    return processed_analysis
