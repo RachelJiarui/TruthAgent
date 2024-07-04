@@ -1,28 +1,3 @@
-// EXAMPLE OF AI ANALYSIS STRUCTURE
-/*
-{
-    "author":"...",
-    "date":"...",
-    "other_sources":{
-        "url":"...",
-        ...
-    },
-    "other_sources_summary":"...",
-    "publisher":"...",
-    "webpage_annotations":{
-        "Blue":[
-
-        ],
-        "Orange":[
-
-        ],
-        "Red":[
-
-        ]
-    }
-}
-*/
-
 export function fetchWebpageAnalysis(aiAnalysis) {
   console.log("Type of aiAnalysis:", typeof aiAnalysis);
   console.log("Stored at aiAnalyis:", JSON.stringify(aiAnalysis));
@@ -31,16 +6,16 @@ export function fetchWebpageAnalysis(aiAnalysis) {
 
 export function fetchRedAnnotations(aiAnalysis) {
   console.log(
-    "Type of webpage annotations:",
-    JSON.stringify(fetchWebpageAnalysis(aiAnalysis)),
+    "What's in red:",
+    JSON.stringify(fetchWebpageAnalysis(aiAnalysis)["red"]),
   );
-  return fetchWebpageAnalysis(aiAnalysis)["Red"];
+  return fetchWebpageAnalysis(aiAnalysis)["red"];
 }
 
 export function fetchOrangeAnnotations(aiAnalysis) {
-  return fetchWebpageAnalysis(aiAnalysis)["Orange"];
+  return fetchWebpageAnalysis(aiAnalysis)["orange"];
 }
 
 export function fetchBlueAnnotations(aiAnalysis) {
-  return fetchWebpageAnalysis(aiAnalysis)["Blue"];
+  return fetchWebpageAnalysis(aiAnalysis)["blue"];
 }

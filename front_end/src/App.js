@@ -1,16 +1,76 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SideBar from "./sidebar/SideBar.js";
 import UnactivePage from "./unactivePage/UnactivePage.js";
 import RightPanel from "./rightside/RightPanel.js";
-// import StartButton from "./StartButton.js";
-// import SignIn from './auth/SignIn.js';
-// import SignUp from './auth/SignUp.js';
+import {
+  fetchAuthor,
+  fetchPublisher,
+  fetchOtherSources,
+  fetchOtherSourcesSummary,
+} from "./aiAnalysisFunctions/fetchParsedInfo.js";
 
 function App() {
   const [selectedAlertType, setSelectedAlertType] = useState("");
   const [aiAnalysis, setAIAnalysis] = useState("");
   const [url, setURL] = useState("");
+
+  useEffect(() => {
+    // Test data set up
+    const mockGetData = {
+      author: fetchAuthor("mockAnalysis"),
+      publisher: fetchPublisher("mockAnalysis"),
+      other_sources: fetchOtherSources("mockAnalysis"),
+      other_sources_summary: fetchOtherSourcesSummary("mockAnalysis"),
+      webpage_annotations: {
+        red: [
+          {
+            sentence:
+              "Identifying where relevant technologies are produced or housed and how they are moved around the world, including the entirety of their supply chain or development stack.",
+            ai_analysis: "This is bad",
+            messages: [
+              {
+                id: 1,
+                actor: "user",
+                msg: "Red Hi there",
+              },
+            ],
+          },
+        ],
+        orange: [
+          {
+            sentence: "policymakers to develop or deploy such defenses",
+            ai_analysis: "Rawr",
+            messages: [
+              {
+                id: 2,
+                actor: "user",
+                msg: "Orange Hi there",
+              },
+              {
+                id: 3,
+                actor: "ai",
+                msg: "Hello there!",
+              },
+            ],
+          },
+        ],
+        blue: [
+          {
+            sentence: "domestic governments, and/or international coordination",
+            ai_analysis: "Rawr",
+            messages: [],
+          },
+        ],
+      },
+    };
+
+    // Setting URL and AI Analysis using useEffect
+    setURL(
+      "https://www.rand.org/global-and-emerging-risks/centers/technology-and-security-policy.html",
+    );
+    setAIAnalysis(mockGetData);
+  }, []);
 
   return (
     <div className="App">
