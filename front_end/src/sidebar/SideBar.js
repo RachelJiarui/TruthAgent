@@ -1,5 +1,4 @@
 import "./SideBar.css";
-import Logo from "./Logo.js";
 import Alert from "./Alert.js";
 import Context from "./Context";
 import {
@@ -13,7 +12,6 @@ function SideBar({ selectedAlertType, setSelectedAlertType, aiAnalysis }) {
 
   return (
     <div className="side-bar">
-      <Logo />
       <div className="side-bar-title">Context</div>
       <Context text="This author is really cool and this takes place in a cool place..." />
       <div className="side-bar-title">Alerts</div>

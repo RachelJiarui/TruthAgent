@@ -1,0 +1,48 @@
+.header {
+    text-align: center;
+    font-size: 18px;
+    font-decoration: bold;
+}
+
+.header-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.navigate {
+    color: grey;
+    font-size: 14px;
+    display: flex;
+    align-items: flex-end;
+    /* Align items to the bottom of the container */
+}
+
+.next {
+    flex: 1;
+    /* Allow .next to take available space */
+    display: flex;
+    justify-content: flex-end;
+    /* Align text inside to the right */
+    align-items: flex-end;
+}
+
+.selected-alert-type-space {
+    margin-right: 8px;
+}
+
+.declaration {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.rightpanel-space {
+    margin: 25px;
+    font-size: 14px;
+}
+
+.top-part {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

@@ -1,9 +1,4 @@
-import {
-  fetchAuthor,
-  fetchOtherSources,
-  fetchOtherSourcesSummary,
-  fetchPublisher,
-} from "../aiAnalysisFunctions/fetchParsedInfo";
+import "./RightSide.css";
 import ChatRoom from "./chatroom/ChatRoom";
 import { useState, useEffect } from "react";
 import WelcomeContextPage from "./WelcomeContextPage";
@@ -14,6 +9,19 @@ function RightPanel({ selectedAlertType, url, aiAnalysis }) {
   const [messages, setMessages] = useState([]);
   const [focusSentence, setFocusSentence] = useState("");
   const [focusSentenceAIAnalysis, setFocusSentenceAIAnalysis] = useState("");
+
+  const getAlertTypeColor = (type) => {
+    switch (type) {
+      case "Blatant Misinformation":
+        return "red";
+      case "Possible Misinformation":
+        return "orange";
+      case "Bias and Manipulation":
+        return "blue";
+      default:
+        return "black";
+    }
+  };
 
   useEffect(() => {
     const selectTypeToKey = {
@@ -38,11 +46,26 @@ function RightPanel({ selectedAlertType, url, aiAnalysis }) {
   console.log("Messages Right Panel to Chat Room:", messages);
 
   return url && selectedAlertType ? (
-    <>
-      <h2>{focusSentence}</h2>
-      <p>{focusSentenceAIAnalysis}</p>
+    <div className="rightpanel-space">
+      <div className="top-part">
+        <div className="header-grid">
+          <div className="navigate">Back</div>
+          <div className="header">Logo</div>
+          <div className="navigate next">Next</div>
+        </div>
+        <div className="declaration">
+          <span
+            className="selected-alert-type-space"
+            style={{ color: getAlertTypeColor(selectedAlertType) }}
+          >
+            {selectedAlertType}
+          </span>
+          {focusSentence}
+        </div>
+        <div className="declaration">{focusSentenceAIAnalysis}</div>
+      </div>
       <ChatRoom messages={messages} setMessages={setMessages} />
-    </>
+    </div>
   ) : (
     <WelcomeContextPage />
   );
