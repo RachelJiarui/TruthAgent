@@ -128,7 +128,7 @@ def check_fact_check_api(query: str) -> tuple[bool, str]:
             # TODO: If they contradict, check textualRating and if it's any variety of true, flag and return the URL of the article that says it's true
             pass
 
-        # TODO: Need to create mechanism for returning fact check information so that the annotation can be created. 
+        # TODO: Need to create mechanism for returning fact check information so that the annotation can be created.
         # Ex. "Flagged for being false by Snopes[URL]"
 
     return False, "The sentence is not verifiably false."

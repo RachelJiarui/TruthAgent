@@ -32,8 +32,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           return response.json();
         })
         .then((aiInfo) => {
-          console.log(aiInfo);
-          sendResponse({ status: "success", data: aiInfo });
+          console.log("Successfully fetched AI info: " + aiInfo);
+          sendResponse({
+            status: "success",
+            data: { aiAnalysis: aiInfo, url: tabUrl },
+          });
         })
         .catch((error) => {
           console.error("Error fetching AI info:", error);

@@ -1,20 +1,20 @@
 import React, { useRef, useState } from "react";
 import ChatMessage from "./ChatMessage.js";
-import getGeminiResp from ".././services/getGeminiResp";
+import getGeminiResp from "../../services/getGeminiResp";
 
-function ChatRoom() {
+function ChatRoom({ messages, setMessages }) {
   const dummy = useRef();
-  const [messages, setMessages] = useState([]);
   const [formValue, setFormValue] = useState("");
 
   const sendMessage = async (e) => {
     e.preventDefault();
 
     let userMessage = formValue;
-    setMessages((prevMessages) => [
-      ...prevMessages,
+    const updatedMessages = [
+      ...messages,
       { id: Date.now(), msg: userMessage, actor: "user" },
-    ]);
+    ];
+    setMessages(updatedMessages);
 
     setFormValue("");
 
@@ -24,16 +24,18 @@ function ChatRoom() {
       " - Response succinctly, like in a conversation, without any markdown formatting.";
     const aiResponse = await getGeminiResp(prompt);
     if (aiResponse) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
+      const updatedMessagesWithAI = [
+        ...updatedMessages,
         { id: Date.now() + 1, msg: aiResponse, actor: "ai" },
-      ]);
+      ];
+      setMessages(updatedMessagesWithAI);
       console.log("retrieved AI response and updated messages list");
     }
 
     dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  console.log("Chatroom updated: ", messages);
   return (
     <>
       <div className="message-box">
