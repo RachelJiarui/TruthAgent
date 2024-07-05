@@ -33,6 +33,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         })
         .then((aiInfo) => {
           console.log("Successfully fetched AI info: " + aiInfo);
+          highlightInfo(tab.id, aiInfo);
           sendResponse({
             status: "success",
             data: { aiAnalysis: aiInfo, url: tabUrl },
@@ -47,3 +48,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; // Indicates that the response is asynchronous
   }
 });
+
+function highlightInfo(tabId, aiInfo) {
+  chrome.scripting.executeScript(
+    {
+      target: { tabId: tabId },
+      files: ["contentScript.js"],
+    },
+    () => {
+      chrome.tabs.sendMessage(
+        tabId,
+        { command: "init", aiInfo: aiInfo },
+        (response) => {
+          console.log(response.result);
+        },
+      );
+    },
+  );
+}

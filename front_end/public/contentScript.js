@@ -1,11 +1,11 @@
 if (typeof init === "undefined") {
-  const init = function () {
-    // Create a function to wrap the word "Google" with a div element
-    const wrapText = (textNode, word) => {
+  const init = function (aiInfo) {
+    // Create a function to wrap a given string with a div element
+    const wrapText = (textNode, highlight, word) => {
       const regex = new RegExp(`(${word})`, "gi");
       const html = textNode.nodeValue.replace(
         regex,
-        `<div class="highlight">$1</div>`,
+        `<div class="${highlight}">$1</div>`,
       );
       const tempElement = document.createElement("div");
       tempElement.innerHTML = html;
@@ -36,19 +36,42 @@ if (typeof init === "undefined") {
       }
     };
 
-    // TEST START: inject CSS for highlighting
-    const style = document.createElement("style");
-    style.textContent = `
-      .highlight {
-        background-color: yellow;
+    // Setting up the colors
+    const redStyle = document.createElement("redStyle");
+    redStyle.textContent = `
+      .red-highlight {
+        background-color: red;
         display: inline;
       }
     `;
-    document.head.appendChild(style);
+    const orangeStyle = document.createElement("orangeStyle");
+    orangeStyle.textContent = `
+      .orange-highlight {
+        background-color: orange;
+        display: inline;
+      }
+    `;
+    const blueStyle = document.createElement("blueStyle");
+    blueStyle.textContent = `
+      .red-highlight {
+        background-color: blue;
+        display: inline;
+      }
+    `;
 
-    // Start the search from the body element
+    document.head.appendChild(redStyle);
+    document.head.appendChild(blueStyle);
+    document.head.appendChild(orangeStyle);
+
+    const alertToStyle = {
+      red: "red-highlight",
+      orange: "orange-highlight",
+      blue: "blue-highlight",
+    };
+
+    // going through all the sentence alerts and highlighting them appropriately
+    console.log("Got to contentScript. AiInfo:", aiInfo);
     searchAndWrap(document.body, "Boston");
-    // TEST END
   };
 
   init();
