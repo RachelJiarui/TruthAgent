@@ -15,15 +15,15 @@ nltk.download('punkt')
 def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
     '''
     Given the body content of a website, return sentences that are annotated. A sentence is annotated by the following rules:
-        - Red: If content is disputed by verifiable facts
-        - Orange: If content is disputed by other sources online and if AI disagrees
-        - Blue: If content contains highly manipulatory wording OR if its political charged
+        - red: If content is disputed by verifiable facts
+        - orange: If content is disputed by other sources online and if AI disagrees
+        - blue: If content contains highly manipulatory wording OR if its political charged
     :param: Body content of the webpage.
     :return: JSON object with the following structure:
         {
-            "Red": [(sentence, ai_analysis)]
-            "Orange": [(sentence, ai_analysis)]
-            "Blue": [(sentence, ai_analysis)]
+            "red": [(sentence, ai_analysis)]
+            "orange": [(sentence, ai_analysis)]
+            "blue": [(sentence, ai_analysis)]
         }
         Where `sentence` is the sentence in the webpage that needs to be highlighted, and the `ai_analysis` being the AI's reasoning.
     '''
@@ -35,9 +35,9 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
     sentences = [sentence.strip() for sentence in sentences]
 
     result = {
-        "Red": [],
-        "Orange": [],
-        "Blue": []
+        "red": [],
+        "orange": [],
+        "blue": []
     }
 
     # Variables helpful for testing
@@ -51,25 +51,25 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
     #     if investigate_red[0]:
     #         result["Red"].append((sentence, investigate_red[1]))
 
-    orange_prompt = 'Given text, return a list of phrases or sentences from the given text that is highly misleading or could be straight misinformation. For each phrase or sentence you believe could be misleading or misinformation, pair it with a 1-2 sentence explanation of why you believe so. Each of these string pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "Orange": List[List[str]]] }. Here is the text: ' + text
+    orange_prompt = 'Given text, return a list of phrases or sentences from the given text that is highly misleading or could be straight misinformation. For each phrase or sentence you believe could be misleading or misinformation, pair it with a 1-2 sentence explanation of why you believe so. Each of these string pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "orange": List[List[str]]] }. Here is the text: ' + text
     orange_resp = talk_to_gemini(orange_prompt, return_json=True)
     print(f"Orange resp: {orange_resp}")
     orange_json = json.loads(orange_resp)
 
     # Investigate orange flagged sentences
-    for red in orange_json["Orange"]:
+    for red in orange_json["orange"]:
         investigate_red = is_red(red[0])
         if investigate_red[0]:
-            result["Red"].append((red[0], investigate_red[1]))
+            result["red"].append((red[0], investigate_red[1]))
         else:
-            result["Orange"].append(red)
-    result["Orange"] = orange_json["Orange"]
+            result["orange"].append(red)
+    result["orange"] = orange_json["orange"]
 
-    blue_prompt = 'Given text, return a list of phrases or sentences from the given text that is politically charged or highly emotionally manipulative for a user. For each phrase or sentence you believe is politically charged or highly emotionally manipulative for a user, pair it with a 1-2 sentence explanation of why you believe so. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "Blue": List[List[str]] }. Here is the text: ' + text
+    blue_prompt = 'Given text, return a list of phrases or sentences from the given text that is politically charged or highly emotionally manipulative for a user. For each phrase or sentence you believe is politically charged or highly emotionally manipulative for a user, pair it with a 1-2 sentence explanation of why you believe so. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "blue": List[List[str]] }. Here is the text: ' + text
     blue_resp = talk_to_gemini(blue_prompt, return_json=True)
-    print(f"Blue resp: {blue_resp}")
+    print(f"blue resp: {blue_resp}")
     blue_json = json.loads(blue_resp)
-    result["Blue"] = blue_json["Blue"]
+    result["blue"] = blue_json["blue"]
 
     return result
 
