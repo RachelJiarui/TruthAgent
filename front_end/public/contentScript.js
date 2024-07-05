@@ -1,11 +1,15 @@
-if (typeof init === "undefined") {
-  const init = function (aiInfo) {
-    // Create a function to wrap a given string with a div element
+/* global chrome */
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.command === "init") {
+    const aiInfo = message.aiInfo.data;
+    console.log("Content script ran. Received:", JSON.stringify(aiInfo));
+
     const wrapText = (textNode, highlight, word) => {
       const regex = new RegExp(`(${word})`, "gi");
       const html = textNode.nodeValue.replace(
         regex,
-        `<div class="${highlight}">$1</div>`,
+        `<span class="${highlight}">$1</span>`,
       );
       const tempElement = document.createElement("div");
       tempElement.innerHTML = html;
@@ -17,12 +21,11 @@ if (typeof init === "undefined") {
       textNode.parentNode.removeChild(textNode);
     };
 
-    // Function to recursively search and wrap the word in text nodes
-    const searchAndWrap = (node, word) => {
+    const searchAndWrap = (node, highlight, word) => {
       if (node.nodeType === 3) {
         // Node.TEXT_NODE
         if (node.nodeValue.toLowerCase().includes(word.toLowerCase())) {
-          wrapText(node, word);
+          wrapText(node, highlight, word);
         }
       } else if (node.nodeType === 1) {
         // Node.ELEMENT_NODE
@@ -31,29 +34,28 @@ if (typeof init === "undefined") {
           child !== null;
           child = child.nextSibling
         ) {
-          searchAndWrap(child, word);
+          searchAndWrap(child, highlight, word);
         }
       }
     };
 
-    // Setting up the colors
-    const redStyle = document.createElement("redStyle");
+    const redStyle = document.createElement("style");
     redStyle.textContent = `
       .red-highlight {
         background-color: red;
         display: inline;
       }
     `;
-    const orangeStyle = document.createElement("orangeStyle");
+    const orangeStyle = document.createElement("style");
     orangeStyle.textContent = `
       .orange-highlight {
         background-color: orange;
         display: inline;
       }
     `;
-    const blueStyle = document.createElement("blueStyle");
+    const blueStyle = document.createElement("style");
     blueStyle.textContent = `
-      .red-highlight {
+      .blue-highlight {
         background-color: blue;
         display: inline;
       }
@@ -69,10 +71,20 @@ if (typeof init === "undefined") {
       blue: "blue-highlight",
     };
 
-    // going through all the sentence alerts and highlighting them appropriately
-    console.log("Got to contentScript. AiInfo:", aiInfo);
-    searchAndWrap(document.body, "Boston");
-  };
+    const webAnnotations = aiInfo.webpage_annotations;
+    Object.entries(webAnnotations).forEach(([color, listOfAlerts]) => {
+      let highlightStyle = alertToStyle[color];
+      listOfAlerts.forEach((alert) => {
+        searchAndWrap(document.body, highlightStyle, alert.sentence);
+      });
+    });
 
-  init();
-}
+    searchAndWrap(
+      document.body,
+      "blue-highlight",
+      "MIT Professor David Karger",
+    );
+
+    sendResponse({ result: "Highlighting completed" });
+  }
+});

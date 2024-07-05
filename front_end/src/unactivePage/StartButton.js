@@ -13,10 +13,10 @@ function StartButton({ setAIAnalysis, setError, setURL }) {
         { action: "runBackgroundTask" },
         (response) => {
           if (response.status === "success") {
-            console.log(
-              "Response retrieved from background.js: ",
-              JSON.stringify(response),
-            );
+            // console.log(
+            //   "Response retrieved from background.js: ",
+            //   JSON.stringify(response),
+            // );
             const aiAnalysis = response.data.aiAnalysis.data;
             const url = response.data.url;
             setURL(url);

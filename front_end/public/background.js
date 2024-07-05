@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return;
       }
 
-      console.log("Valid URL found: " + tabUrl + ". Calling ai info API...");
+      console.log("Valid URL found: " + tabUrl + ". Calling AI info API...");
       // Call the Flask API GET endpoint '/ai-reading', passing in the URL
       fetch(
         `http://127.0.0.1:5000/ai-reading?url=${encodeURIComponent(tabUrl)}`,
@@ -32,7 +32,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           return response.json();
         })
         .then((aiInfo) => {
-          console.log("Successfully fetched AI info: " + aiInfo);
+          console.log(
+            "Successfully fetched AI info: " + JSON.stringify(aiInfo),
+          );
           highlightInfo(tab.id, aiInfo);
           sendResponse({
             status: "success",
@@ -50,17 +52,36 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 function highlightInfo(tabId, aiInfo) {
+  console.log("Executing highlightInfo function...");
   chrome.scripting.executeScript(
     {
       target: { tabId: tabId },
       files: ["contentScript.js"],
     },
     () => {
+      if (chrome.runtime.lastError) {
+        console.error(
+          "Error injecting content script:",
+          chrome.runtime.lastError.message,
+        );
+        return;
+      }
       chrome.tabs.sendMessage(
         tabId,
         { command: "init", aiInfo: aiInfo },
         (response) => {
-          console.log(response.result);
+          if (chrome.runtime.lastError) {
+            console.error(
+              "Error sending message to content script:",
+              chrome.runtime.lastError.message,
+            );
+            return;
+          }
+          if (response && response.result) {
+            console.log(response.result);
+          } else {
+            console.error("No response from content script.");
+          }
         },
       );
     },

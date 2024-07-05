@@ -10,12 +10,13 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 model = genai.GenerativeModel('gemini-1.5-flash')
 model_json = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
 
-SAFETY_SETTINGS = [
-    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": 4},
-    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": 4},
-    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": 4},
-    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": 4}
-]
+# HARM_CATEGORY_HARASSMENT, HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, and HARM_CATEGORY_DANGEROUS_CONTENT
+SAFETY_SETTINGS = {
+    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE
+}
 
 def talk_to_gemini(user_prompt: Union[str, None], return_json=False) -> str:
     '''
