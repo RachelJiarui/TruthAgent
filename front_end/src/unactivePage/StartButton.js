@@ -21,7 +21,6 @@ function StartButton({ setAIAnalysis, setError, setURL }) {
             const url = response.data.url;
             setURL(url);
             setAIAnalysis(aiAnalysis);
-            // TODO: Post on a database with the URL as a key and the ai analysis to store it
           } else {
             console.log("Error:", response.message);
             setError(response.message);

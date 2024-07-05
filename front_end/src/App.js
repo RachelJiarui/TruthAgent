@@ -66,10 +66,10 @@ function App() {
     };
 
     // Setting URL and AI Analysis using useEffect
-    setURL(
-      "https://www.rand.org/global-and-emerging-risks/centers/technology-and-security-policy.html",
-    );
-    setAIAnalysis(mockGetData);
+    // setURL(
+    //   "https://www.rand.org/global-and-emerging-risks/centers/technology-and-security-policy.html",
+    // );
+    // setAIAnalysis(mockGetData);
   }, []);
 
   return (
