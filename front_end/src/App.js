@@ -36,6 +36,28 @@ function App() {
               },
             ],
           },
+          {
+            sentence: "Rachel is awesome",
+            ai_analysis: "Holy cow",
+            messages: [
+              {
+                id: 1,
+                actor: "user",
+                msg: "AGHHHH",
+              },
+            ],
+          },
+          {
+            sentence: "How are you doing",
+            ai_analysis: "Mongosh!",
+            messages: [
+              {
+                id: 1,
+                actor: "user",
+                msg: "Oh god",
+              },
+            ],
+          },
         ],
         orange: [
           {
@@ -65,11 +87,11 @@ function App() {
       },
     };
 
-    // Setting URL and AI Analysis using useEffect
-    // setURL(
-    //   "https://www.rand.org/global-and-emerging-risks/centers/technology-and-security-policy.html",
-    // );
-    // setAIAnalysis(mockGetData);
+    // comment this out if you don't want fake test data
+    setURL(
+      "https://www.rand.org/global-and-emerging-risks/centers/technology-and-security-policy.html",
+    );
+    setAIAnalysis(mockGetData);
   }, []);
 
   return (

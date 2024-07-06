@@ -9,6 +9,7 @@ function RightPanel({ selectedAlertType, url, aiAnalysis }) {
   const [messages, setMessages] = useState([]);
   const [focusSentence, setFocusSentence] = useState("");
   const [focusSentenceAIAnalysis, setFocusSentenceAIAnalysis] = useState("");
+  const [index, setIndex] = useState(0);
 
   const getAlertTypeColor = (type) => {
     switch (type) {
@@ -23,25 +24,43 @@ function RightPanel({ selectedAlertType, url, aiAnalysis }) {
     }
   };
 
-  useEffect(() => {
-    const selectTypeToKey = {
-      "Blatant Misinformation": "red",
-      "Possible Misinformation": "orange",
-      "Bias and Manipulation": "blue",
-    };
+  const selectTypeToKey = {
+    "Blatant Misinformation": "red",
+    "Possible Misinformation": "orange",
+    "Bias and Manipulation": "blue",
+  };
+  const alertTypeKey = selectTypeToKey[selectedAlertType];
 
+  useEffect(() => {
     if (url && selectedAlertType) {
       console.log("Setting values in Right Panel");
-      const alertTypeKey = selectTypeToKey[selectedAlertType];
       const annotations = aiAnalysis.webpage_annotations?.[alertTypeKey];
 
       if (annotations && annotations.length > 0) {
-        setMessages(annotations[0].messages);
-        setFocusSentence(annotations[0].sentence);
-        setFocusSentenceAIAnalysis(annotations[0].ai_analysis);
+        setMessages(annotations[index].messages);
+        setFocusSentence(annotations[index].sentence);
+        setFocusSentenceAIAnalysis(annotations[index].ai_analysis);
       }
     }
-  }, [selectedAlertType, url, aiAnalysis]);
+  }, [selectedAlertType, url, aiAnalysis, index, alertTypeKey]);
+
+  function goBack() {
+    console.log("Go back called:", index);
+    if (index > 0) {
+      setIndex(index - 1);
+    }
+  }
+
+  function goNext() {
+    console.log(
+      "Go next called:",
+      index,
+      aiAnalysis.webpage_annotations?.[alertTypeKey].length,
+    );
+    if (index < aiAnalysis.webpage_annotations?.[alertTypeKey].length - 1) {
+      setIndex(index + 1);
+    }
+  }
 
   console.log("Messages Right Panel to Chat Room:", messages);
 
@@ -49,9 +68,13 @@ function RightPanel({ selectedAlertType, url, aiAnalysis }) {
     <div className="rightpanel-space">
       <div className="top-part">
         <div className="header-grid">
-          <div className="navigate">Back</div>
+          <div className="navigate" onClick={goBack}>
+            Back
+          </div>
           <div className="header">Logo</div>
-          <div className="navigate next">Next</div>
+          <div className="navigate next" onClick={goNext}>
+            Next
+          </div>
         </div>
         <div className="declaration">
           <span
