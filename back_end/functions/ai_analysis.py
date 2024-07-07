@@ -58,7 +58,7 @@ def ai_analysis(url: str) -> dict:
         "other_sources_summary": external_summary,
         "webpage_annotations": webpage_annotations_analysis
     }
-    result = process_ai_analysis(result, url)[url]
+    result = process_ai_analysis(result, url)
     print(f"Finished ai analysis: {result}")
 
     return result
@@ -102,19 +102,18 @@ def process_ai_analysis(raw_ai_analysis: dict, url: str):
         }
     '''
     processed_analysis = {
-        url: {
-            "author": raw_ai_analysis["author"],
-            "publisher": raw_ai_analysis["publisher"],
-            "date": raw_ai_analysis["date"],
-            "other_sources": raw_ai_analysis["other_sources"],
-            "other_sources_summary": raw_ai_analysis["other_sources_summary"],
-            "webpage_annotations": {}
-        }
+        "url": url,
+        "author": raw_ai_analysis["author"],
+        "publisher": raw_ai_analysis["publisher"],
+        "date": raw_ai_analysis["date"],
+        "other_sources": raw_ai_analysis["other_sources"],
+        "other_sources_summary": raw_ai_analysis["other_sources_summary"],
+        "webpage_annotations": {}
     }
 
     # Process webpage annotations
     for color, annotations in raw_ai_analysis["webpage_annotations"].items():
-        processed_analysis[url]["webpage_annotations"][color] = [
+        processed_analysis["webpage_annotations"][color] = [
             {
                 "sentence": sentence,
                 "ai_analysis": ai_analysis,

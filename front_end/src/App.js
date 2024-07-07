@@ -88,10 +88,10 @@ function App() {
     };
 
     // comment this out if you don't want fake test data
-    setURL(
-      "https://www.rand.org/global-and-emerging-risks/centers/technology-and-security-policy.html",
-    );
-    setAIAnalysis(mockGetData);
+    // setURL(
+    //   "https://www.rand.org/global-and-emerging-risks/centers/technology-and-security-policy.html",
+    // );
+    // setAIAnalysis(mockGetData);
   }, []);
 
   return (

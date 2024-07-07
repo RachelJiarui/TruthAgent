@@ -4,29 +4,40 @@ import "../App.css";
 function StartButton({ setAIAnalysis, setError, setURL }) {
   async function handleButtonClick() {
     setError("Fetching information...");
+
     if (
       typeof chrome !== "undefined" &&
       chrome.runtime &&
       chrome.runtime.sendMessage
     ) {
-      chrome.runtime.sendMessage(
-        { action: "runBackgroundTask" },
-        (response) => {
-          if (response.status === "success") {
-            // console.log(
-            //   "Response retrieved from background.js: ",
-            //   JSON.stringify(response),
-            // );
-            const aiAnalysis = response.data.aiAnalysis.data;
-            const url = response.data.url;
-            setURL(url);
-            setAIAnalysis(aiAnalysis);
-          } else {
-            console.log("Error:", response.message);
-            setError(response.message);
-          }
-        },
-      );
+      try {
+        const response = await new Promise((resolve, reject) => {
+          chrome.runtime.sendMessage(
+            { action: "runBackgroundTask" },
+            (response) => {
+              if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError.message));
+              } else {
+                resolve(response);
+              }
+            },
+          );
+        });
+
+        console.log("Got back to StartButton:", JSON.stringify(response));
+        if (response.status === "success") {
+          const aiAnalysis = response.data.aiAnalysis.data;
+          const url = response.data.aiAnalysis.data.url;
+          setURL(url);
+          setAIAnalysis(aiAnalysis);
+        } else {
+          console.log("Error:", response.message);
+          setError(response.message);
+        }
+      } catch (error) {
+        console.error("Error in response:", error.message);
+        setError(error.message);
+      }
     } else {
       const errorMessage = "Chrome runtime is not available";
       setError(errorMessage);

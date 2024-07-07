@@ -1,51 +1,81 @@
 /* global chrome */
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "runBackgroundTask") {
-    // Get the URL of the current window tab
+function getCurrentTabUrl() {
+  return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs.length === 0) {
-        sendResponse({ status: "error", message: "No active tab found" });
+        resolve(null);
         return;
       }
-
       const tab = tabs[0];
       const tabUrl = tab.url;
 
       if (tabUrl.startsWith("chrome://")) {
-        sendResponse({
-          status: "error",
-          message: "Cannot process chrome:// URLs",
-        });
+        resolve(null);
         return;
       }
 
-      console.log("Valid URL found: " + tabUrl + ". Calling AI info API...");
-      // Call the Flask API GET endpoint '/ai-reading', passing in the URL
-      fetch(
-        `http://127.0.0.1:5000/ai-reading?url=${encodeURIComponent(tabUrl)}`,
-      )
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+      resolve(tabUrl); // Resolve the promise with the tab URL
+    });
+  });
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "runBackgroundTask") {
+    (async () => {
+      try {
+        const url = await getCurrentTabUrl();
+        if (!url) {
+          sendResponse({
+            status: "error",
+            message: "No active tab found or invalid URL",
+          });
+          return;
+        }
+
+        console.log("Calling /check-cache");
+        // Call Flask API GET endpoint /check-cache with the url to see if there is anything
+        const response = await fetch(
+          `http://127.0.0.1:5000/check-cache?url=${encodeURIComponent(url)}`,
+        );
+        if (!response.ok) {
+          throw new Error(
+            `HTTP error for checking cache! status: ${response.status}`,
+          );
+        }
+
+        const isAiInfo = await response.json();
+        console.log("Received AI analysis from check-cache:", isAiInfo);
+        if (isAiInfo) {
+          sendResponse({
+            status: "success",
+            data: { aiAnalysis: isAiInfo, url: url },
+          });
+        } else {
+          console.log("Valid URL found: " + url + ". Calling AI info API...");
+          const aiResponse = await fetch(
+            `http://127.0.0.1:5000/ai-reading?url=${encodeURIComponent(url)}`,
+          );
+          if (!aiResponse.ok) {
+            throw new Error(
+              `HTTP error for AI Analysis! status: ${aiResponse.status}`,
+            );
           }
-          return response.json();
-        })
-        .then((aiInfo) => {
+
+          const aiInfo = await aiResponse.json();
           console.log(
             "Successfully fetched AI info: " + JSON.stringify(aiInfo),
           );
-          highlightInfo(tab.id, aiInfo);
+          highlightInfo(sender.tab.id, aiInfo);
           sendResponse({
             status: "success",
-            data: { aiAnalysis: aiInfo, url: tabUrl },
+            data: { aiAnalysis: aiInfo, url: url },
           });
-        })
-        .catch((error) => {
-          console.error("Error fetching AI info:", error);
-          sendResponse({ status: "error", message: error.message });
-        });
-    });
+        }
+      } catch (error) {
+        console.error("Error in background task:", error.message);
+        sendResponse({ status: "error", message: error.message });
+      }
+    })();
 
     return true; // Indicates that the response is asynchronous
   }

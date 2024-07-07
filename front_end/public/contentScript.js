@@ -79,12 +79,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
 
-    searchAndWrap(
-      document.body,
-      "blue-highlight",
-      "MIT Professor David Karger",
-    );
+    searchAndWrap(document.body, "blue-highlight", "Technology");
 
     sendResponse({ result: "Highlighting completed" });
   }
+  return true;
 });
