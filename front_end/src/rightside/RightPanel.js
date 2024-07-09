@@ -5,11 +5,10 @@ import WelcomeContextPage from "./WelcomeContextPage";
 
 // TODO: Fetch from database given url and aiAnalysis to retrieve all the messages associated for each alert
 // TODO: Once you get all the messages associated for the specific selectedAlertType, set messages to be the first one and set the tabs to be the titles of the other messages
-function RightPanel({ selectedAlertType, url, aiAnalysis }) {
+function RightPanel({ index, setIndex, selectedAlertType, url, aiAnalysis }) {
   const [messages, setMessages] = useState([]);
   const [focusSentence, setFocusSentence] = useState("");
   const [focusSentenceAIAnalysis, setFocusSentenceAIAnalysis] = useState("");
-  const [index, setIndex] = useState(0);
 
   const getAlertTypeColor = (type) => {
     switch (type) {
@@ -42,7 +41,7 @@ function RightPanel({ selectedAlertType, url, aiAnalysis }) {
         setFocusSentenceAIAnalysis(annotations[index].ai_analysis);
       }
     }
-  }, [selectedAlertType, url, aiAnalysis, index, alertTypeKey]);
+  }, [selectedAlertType, url, aiAnalysis, index, alertTypeKey, messages]);
 
   function goBack() {
     console.log("Go back called:", index);
@@ -62,32 +61,36 @@ function RightPanel({ selectedAlertType, url, aiAnalysis }) {
     }
   }
 
-  console.log("Messages Right Panel to Chat Room:", messages);
-
   return url && selectedAlertType ? (
     <div className="rightpanel-space">
-      <div className="top-part">
-        <div className="header-grid">
-          <div className="navigate" onClick={goBack}>
-            Back
+      {aiAnalysis.webpage_annotations?.[alertTypeKey].length > 0 ? (
+        <>
+          <div className="top-part">
+            <div className="header-grid">
+              <div className="navigate" onClick={goBack}>
+                Back
+              </div>
+              <div className="header">Logo</div>
+              <div className="navigate next" onClick={goNext}>
+                Next
+              </div>
+            </div>
+            <div className="declaration">
+              <span
+                className="selected-alert-type-space"
+                style={{ color: getAlertTypeColor(selectedAlertType) }}
+              >
+                {selectedAlertType}
+              </span>
+              {focusSentence}
+            </div>
+            <div className="declaration">{focusSentenceAIAnalysis}</div>
           </div>
-          <div className="header">Logo</div>
-          <div className="navigate next" onClick={goNext}>
-            Next
-          </div>
-        </div>
-        <div className="declaration">
-          <span
-            className="selected-alert-type-space"
-            style={{ color: getAlertTypeColor(selectedAlertType) }}
-          >
-            {selectedAlertType}
-          </span>
-          {focusSentence}
-        </div>
-        <div className="declaration">{focusSentenceAIAnalysis}</div>
-      </div>
-      <ChatRoom messages={messages} setMessages={setMessages} />
+          <ChatRoom messages={messages} setMessages={setMessages} />
+        </>
+      ) : (
+        <div>Hi</div>
+      )}
     </div>
   ) : (
     <WelcomeContextPage />

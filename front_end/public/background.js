@@ -1,5 +1,5 @@
 /* global chrome */
-function getCurrentTabUrl() {
+function getCurrentTab() {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs.length === 0) {
@@ -14,7 +14,7 @@ function getCurrentTabUrl() {
         return;
       }
 
-      resolve(tabUrl); // Resolve the promise with the tab URL
+      resolve(tab); // Resolve the promise with the tab (tab.url) is the actual url
     });
   });
 }
@@ -23,7 +23,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "runBackgroundTask") {
     (async () => {
       try {
-        const url = await getCurrentTabUrl();
+        const tab = await getCurrentTab();
+        console.log("This is what tab stores:", JSON.stringify(tab));
+        const url = tab?.url;
         if (!url) {
           sendResponse({
             status: "error",
@@ -65,7 +67,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           console.log(
             "Successfully fetched AI info: " + JSON.stringify(aiInfo),
           );
-          highlightInfo(sender.tab.id, aiInfo);
+          highlightInfo(tab.id, aiInfo);
           sendResponse({
             status: "success",
             data: { aiAnalysis: aiInfo, url: url },

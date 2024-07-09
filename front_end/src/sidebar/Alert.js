@@ -5,12 +5,14 @@ function Alert({
   color,
   selectedAlertType,
   setSelectedAlertType,
+  setIndex,
 }) {
   const alertStyle = {
     color: color,
   };
 
   function handleClickAlert() {
+    setIndex(0);
     setSelectedAlertType(title);
   }
 

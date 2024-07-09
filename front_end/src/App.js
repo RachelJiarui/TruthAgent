@@ -14,6 +14,7 @@ function App() {
   const [selectedAlertType, setSelectedAlertType] = useState("");
   const [aiAnalysis, setAIAnalysis] = useState("");
   const [url, setURL] = useState("");
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     // Test data set up
@@ -102,6 +103,7 @@ function App() {
         <div className="container">
           <div className="left-panel">
             <SideBar
+              setIndex={setIndex}
               selectedAlertType={selectedAlertType}
               setSelectedAlertType={setSelectedAlertType}
               aiAnalysis={aiAnalysis}
@@ -113,6 +115,8 @@ function App() {
               selectedAlertType={selectedAlertType}
               aiAnalysis={aiAnalysis}
               url={url}
+              setIndex={setIndex}
+              index={index}
             />
           </div>
         </div>

@@ -74,6 +74,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const webAnnotations = aiInfo.webpage_annotations;
     Object.entries(webAnnotations).forEach(([color, listOfAlerts]) => {
       let highlightStyle = alertToStyle[color];
+      console.log("Highlight: ", alert.sentence, highlightStyle);
       listOfAlerts.forEach((alert) => {
         searchAndWrap(document.body, highlightStyle, alert.sentence);
       });

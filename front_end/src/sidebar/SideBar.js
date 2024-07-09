@@ -7,7 +7,12 @@ import {
   fetchOrangeAnnotations,
 } from "../aiAnalysisFunctions/fetchWebpageAnalysis.js";
 
-function SideBar({ selectedAlertType, setSelectedAlertType, aiAnalysis }) {
+function SideBar({
+  setIndex,
+  selectedAlertType,
+  setSelectedAlertType,
+  aiAnalysis,
+}) {
   console.log(selectedAlertType);
 
   return (
@@ -19,6 +24,7 @@ function SideBar({ selectedAlertType, setSelectedAlertType, aiAnalysis }) {
         title="Blatant Misinformation"
         count={fetchRedAnnotations(aiAnalysis).length}
         color="#FF0000"
+        setIndex={setIndex}
         selectedAlertType={selectedAlertType}
         setSelectedAlertType={setSelectedAlertType}
       />
@@ -26,6 +32,7 @@ function SideBar({ selectedAlertType, setSelectedAlertType, aiAnalysis }) {
         title="Possible Misinformation"
         count={fetchOrangeAnnotations(aiAnalysis).length}
         color="#FFA500"
+        setIndex={setIndex}
         selectedAlertType={selectedAlertType}
         setSelectedAlertType={setSelectedAlertType}
       />
@@ -33,6 +40,7 @@ function SideBar({ selectedAlertType, setSelectedAlertType, aiAnalysis }) {
         title="Bias and Manipulation"
         count={fetchBlueAnnotations(aiAnalysis).length}
         color="#004AF9"
+        setIndex={setIndex}
         selectedAlertType={selectedAlertType}
         setSelectedAlertType={setSelectedAlertType}
       />
