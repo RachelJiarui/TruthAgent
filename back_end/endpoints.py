@@ -3,6 +3,7 @@ from flask_cors import CORS
 from functions.talk_to_gemini import talk_to_gemini
 from functions.parse_webpage import parse_webpage
 from functions.ai_analysis import ai_analysis
+from datetime import datetime
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -15,6 +16,72 @@ mongo_uri = "mongodb://127.0.0.1:27017/aianalysis"
 client = MongoClient(mongo_uri)
 db = client.aianalysis
 collection = db.analysis_results
+
+@app.route('/get-msgs', methods=['GET'])
+def get_msgs():
+    url = request.args.get('url')
+    focus_type = request.args.get('focusType')
+    focus_sentence = request.args.get('focusSentence')
+
+    if not url or not focus_sentence or not focus_type:
+        return jsonify({"error": "URL, focus sentence and focus type parameter is required"}), 400
+
+    ai_analysis = collection.find_one({"url": url})
+
+    if not ai_analysis:
+        return jsonify({"error": "No analysis found for the given URL"}), 404
+
+    annotations = ai_analysis.get("webpage_annotations", {}).get(focus_type, [])
+
+    for annotation in annotations:
+        if annotation["sentence"] == focus_sentence:
+            messages = annotation.get("messages", [])
+            return jsonify({"messages": messages}), 200
+
+    return jsonify({"error": "Focus sentence not found"}), 404
+
+@app.route('/post-msg-pairing', methods=['POST'])
+def post_msg_pairing():
+    data = request.json  # Access the JSON payload
+    if not data:
+        return jsonify({"error": "Data is required"}), 400
+
+    url = data.get('url')
+    focus_type = data.get('focusType')
+    focus_sentence = data.get('focusSentence')
+    user_msg = data.get('userMsg')
+    ai_msg = data.get('aiMsg')
+
+    if not url or not focus_type or not focus_sentence or not user_msg or not ai_msg:
+        return jsonify({"error": "Did not fulfill parameter requirements"}), 400
+
+    ai_analysis = collection.find_one({"url": url})
+
+    if not ai_analysis:
+        return jsonify({"error": "No analysis found for the given URL"}), 404
+
+    annotations = ai_analysis.get("webpage_annotations", {}).get(focus_type, [])
+
+    for annotation in annotations:
+        if annotation["sentence"] == focus_sentence:
+            timestamp = datetime.utcnow().isoformat()
+            annotation["messages"].append({
+                "id": f"{user_msg}-user-{timestamp}",
+                "actor": "user",
+                "msg": user_msg
+            })
+            annotation["messages"].append({
+                "id": f"{ai_msg}-ai-{timestamp}",
+                "actor": "ai",
+                "msg": ai_msg
+            })
+            break
+    else:
+        return jsonify({"error": "Focus sentence not found"}), 404
+
+    collection.update_one({"url": url}, {"$set": {"webpage_annotations": ai_analysis["webpage_annotations"]}})
+
+    return jsonify({"status": "success", "message": "Messages added successfully"})
 
 # Retrieve existing ai analysis at a URL if it exists, otherwise return False
 @app.route('/check-cache', methods=['GET'])

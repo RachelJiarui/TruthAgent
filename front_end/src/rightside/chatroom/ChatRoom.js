@@ -1,18 +1,24 @@
 import React, { useRef, useState } from "react";
 import ChatMessage from "./ChatMessage.js";
 import getGeminiResp from "../../services/getGeminiResp";
+import postMessagesToDatabase from "../../services/postMessagesToDatabase";
 
-function ChatRoom({ messages, setMessages }) {
+function ChatRoom({ url, focusSentence, focusType, messages, setMessages }) {
   const dummy = useRef();
   const [formValue, setFormValue] = useState("");
 
   const sendMessage = async (e) => {
+    console.log("Sent message, got form value:", formValue);
     e.preventDefault();
 
     let userMessage = formValue;
     const updatedMessages = [
       ...messages,
-      { id: Date.now(), msg: userMessage, actor: "user" },
+      {
+        id: `${userMessage}-user-${Date.now()}`,
+        msg: userMessage,
+        actor: "user",
+      },
     ];
     setMessages(updatedMessages);
 
@@ -26,12 +32,19 @@ function ChatRoom({ messages, setMessages }) {
     if (aiResponse) {
       const updatedMessagesWithAI = [
         ...updatedMessages,
-        { id: Date.now() + 1, msg: aiResponse, actor: "ai" },
+        { id: `${aiResponse}-ai-${Date.now()}`, msg: aiResponse, actor: "ai" },
       ];
       setMessages(updatedMessagesWithAI);
       console.log("retrieved AI response and updated messages list");
     }
 
+    await postMessagesToDatabase(
+      url,
+      focusType,
+      focusSentence,
+      userMessage,
+      aiResponse,
+    );
     dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
