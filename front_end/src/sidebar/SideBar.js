@@ -17,8 +17,6 @@ function SideBar({
 
   return (
     <div className="side-bar">
-      <div className="side-bar-title">Context</div>
-      <Context text="This author is really cool and this takes place in a cool place..." />
       <div className="side-bar-title">Alerts</div>
       <Alert
         title="Blatant Misinformation"
