@@ -73,45 +73,48 @@ function RightPanel({ index, setIndex, selectedAlertType, url, aiAnalysis }) {
     }
   }
 
-  return url && selectedAlertType ? (
+  return (
     <div className="rightpanel-space">
-      {aiAnalysis.webpage_annotations?.[alertTypeKey].length > 0 ? (
-        <>
-          <div className="top-part">
-            <div className="header-grid">
-              <div className="navigate" onClick={goBack}>
-                Back
+      {url && selectedAlertType ? (
+        aiAnalysis.webpage_annotations?.[alertTypeKey].length > 0 ? (
+          <>
+            <div className="top-part">
+              <div className="header-grid">
+                <div className="navigate" onClick={goBack}>
+                  Back
+                </div>
+                <div className="header">Logo</div>
+                <div className="navigate next" onClick={goNext}>
+                  Next
+                </div>
               </div>
-              <div className="header">Logo</div>
-              <div className="navigate next" onClick={goNext}>
-                Next
+              <div className="declaration">
+                <span
+                  className="selected-alert-type-space"
+                  style={{ color: getAlertTypeColor(selectedAlertType) }}
+                >
+                  {selectedAlertType}
+                </span>
+                {focusSentence}
               </div>
+              <div className="declaration">{focusSentenceAIAnalysis}</div>
             </div>
-            <div className="declaration">
-              <span
-                className="selected-alert-type-space"
-                style={{ color: getAlertTypeColor(selectedAlertType) }}
-              >
-                {selectedAlertType}
-              </span>
-              {focusSentence}
-            </div>
-            <div className="declaration">{focusSentenceAIAnalysis}</div>
-          </div>
-          <ChatRoom
-            url={url}
-            focusType={alertTypeKey}
-            focusSentence={focusSentence}
-            messages={messages}
-            setMessages={setMessages}
-          />
-        </>
+            <ChatRoom
+              url={url}
+              focusType={alertTypeKey}
+              focusSentence={focusSentence}
+              messages={messages}
+              setMessages={setMessages}
+              focusSentenceAIAnalysis={focusSentenceAIAnalysis}
+            />
+          </>
+        ) : (
+          <div>Hi</div>
+        )
       ) : (
-        <div>Hi</div>
+        <WelcomeContextPage aiAnalysis={aiAnalysis} />
       )}
     </div>
-  ) : (
-    <WelcomeContextPage />
   );
 }
 

@@ -3,7 +3,14 @@ import ChatMessage from "./ChatMessage.js";
 import getGeminiResp from "../../services/getGeminiResp";
 import postMessagesToDatabase from "../../services/postMessagesToDatabase";
 
-function ChatRoom({ url, focusSentence, focusType, messages, setMessages }) {
+function ChatRoom({
+  url,
+  focusSentence,
+  focusSentenceAIAnalysis,
+  focusType,
+  messages,
+  setMessages,
+}) {
   const dummy = useRef();
   const [formValue, setFormValue] = useState("");
 

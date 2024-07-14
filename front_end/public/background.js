@@ -48,6 +48,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const isAiInfo = await response.json();
         console.log("Received AI analysis from check-cache:", isAiInfo);
         if (isAiInfo) {
+          highlightInfo(tab.id, isAiInfo);
           sendResponse({
             status: "success",
             data: { aiAnalysis: isAiInfo, url: url },

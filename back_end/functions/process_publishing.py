@@ -15,13 +15,11 @@ def get_publishing_details(content: str) -> dict:
     '''
     Gets the author, the date of when the content was published, the main content or title of the content, and who the publisher is.
     :param content: main content scraped from HTML.
-    :return: JSON object with the keys being 'author', 'date', 'main_idea', and 'publisher'.
+    :return: JSON object with the keys being 'author', 'date', 'main_idea', 'title', and 'publisher'.
     '''
-    prompt = "Given this body text from an article, tell me who the author is, the date it was published, the main idea or title of the content, and who the publisher of the article is. If there is no author listed, write 'No author'. If there is no date listed, write 'No date'. If there is no publisher listed, write 'No publisher'. Return JSON format with the keys being 'author', 'date', 'main_idea' and 'publisher'. Return nothing but this JSON object."
+    prompt = "Given this body text from an article, tell me what the title is, tell me who the author is, the date it was published, the main idea of the content, and who the publisher of the article is. If there is no author listed, write 'No author'. If there is no date listed, write 'No date'. If there is no publisher listed, write 'No publisher'. If there is no title, write 'No title'. Return JSON format with the keys being title', 'author', 'date', 'main_idea' and 'publisher'. Return nothing but this JSON object."
     resp = talk_to_gemini(prompt + ": " + content, return_json=True)
     return json.loads(resp)
-
-
 
 def investigate_publishing_details(author: str, publisher: str) -> dict:
     '''

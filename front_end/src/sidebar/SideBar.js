@@ -1,6 +1,5 @@
 import "./SideBar.css";
 import Alert from "./Alert.js";
-import Context from "./Context";
 import {
   fetchRedAnnotations,
   fetchBlueAnnotations,
@@ -42,6 +41,7 @@ function SideBar({
         selectedAlertType={selectedAlertType}
         setSelectedAlertType={setSelectedAlertType}
       />
+      <div className="side-bar-title view-stats">View Stats</div>
     </div>
   );
 }

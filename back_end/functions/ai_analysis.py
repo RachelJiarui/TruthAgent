@@ -11,19 +11,7 @@ def ai_analysis(url: str) -> dict:
     '''
     Builds AI analysis of a given URL.
     :param url: String of the URL.
-    :return: JSON object that follows this structure
-    {
-    	"author": author content,
-    	"publisher": publish content,
-    	"date": date content,
-    	"other_sources": [url]
-    	"other_sources_summary": summary content
-    	"webpage_annotations": [
-    		"red": [(sentence, ai_analysis)]
-    		"orange": [(sentence, ai_analysis)]
-    		"blue": [(sentence, ai_analysis)]
-    	]
-   	}
+    :return: JSON object.
     '''
     print(f"Got to ai analysis. Parsing webpage given url: {url}")
     webpage_content = parse_webpage(url)
@@ -31,6 +19,7 @@ def ai_analysis(url: str) -> dict:
     body_content = get_body_content(webpage_content)
     print(f"Got body of the content. Getting publishing details with webpage content: {webpage_content}")
     publishing_details = get_publishing_details(webpage_content)
+    title = publishing_details["title"]
     author = publishing_details["author"]
     date = publishing_details["date"]
     publisher = publishing_details["publisher"]
@@ -51,9 +40,14 @@ def ai_analysis(url: str) -> dict:
     webpage_annotations_analysis = webpage_annotations(body_content)
 
     result = {
-        "author": author_analysis,
-        "publisher": publisher_analysis,
-        "date": date_analysis,
+        "title": title,
+        "main_idea": main_idea,
+        "author": author,
+        "date": date,
+        "publisher": publisher,
+        "author_analysis": author_analysis,
+        "publisher_analysis": publisher_analysis,
+        "date_analysis": date_analysis,
         "other_sources": other_sources,
         "other_sources_summary": external_summary,
         "webpage_annotations": webpage_annotations_analysis
@@ -103,9 +97,14 @@ def process_ai_analysis(raw_ai_analysis: dict, url: str):
     '''
     processed_analysis = {
         "url": url,
+        "title": raw_ai_analysis["title"],
+        "main_idea": raw_ai_analysis["main_idea"],
+        "date": raw_ai_analysis["date"],
         "author": raw_ai_analysis["author"],
         "publisher": raw_ai_analysis["publisher"],
-        "date": raw_ai_analysis["date"],
+        "author_analysis": raw_ai_analysis["author_analysis"],
+        "publisher_analysis": raw_ai_analysis["publisher_analysis"],
+        "date_analysis": raw_ai_analysis["date_analysis"],
         "other_sources": raw_ai_analysis["other_sources"],
         "other_sources_summary": raw_ai_analysis["other_sources_summary"],
         "webpage_annotations": {}

@@ -1,8 +1,9 @@
 .side-bar {
-    margin: 10px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     color: grey;
+    height: 580px;
 }
 
 .side-bar-title {
@@ -48,4 +49,10 @@
 
 .learn-more {
     font-size: 12px;
+}
+
+.view-stats {
+    text-decoration: underline;
+    margin-top: auto;
+    cursor: pointer;
 }

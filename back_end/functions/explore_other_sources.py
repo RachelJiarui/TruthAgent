@@ -44,7 +44,7 @@ def find_other_sources(main_idea: str) -> dict:
 
     links = []
     results = driver.find_elements(By.CSS_SELECTOR, "a[jsname='UWckNb']") # a.UWckNb
-    for result in results[:5]:
+    for result in results[1:5]:
         links.append(result.get_attribute("href"))
 
     driver.quit()
@@ -57,7 +57,6 @@ def find_other_sources(main_idea: str) -> dict:
     scraped_data = {}
     for link in links:
         content = parse_webpage(link)
-        # TODO: Handling CAPTCHA
         if content:
             scraped_data[link] = content
 
@@ -78,7 +77,7 @@ def explore_sources(external_urls_data: dict, original_source_content: str) -> s
     source_content_summary = summarize_content(original_source_content)
 
     # Compare the original content with the scraped content
-    comparison_prompt = f"Compare the sentiment and perspectives between two summaries different webpages. Highlight differences and similarities in the information they suggest is true. The original content is summary is: {source_content_summary}. The scraped content is summary is: {summary}. If some of the scraped content agrees with the original content, what are the similarities? If some of the scraped content disagrees with the original content, what are the differences?"
+    comparison_prompt = f"Compare the sentiment and perspectives between two summaries different webpages. Highlight differences and similarities in the information they suggest is true. The original content is summary is: {source_content_summary}. The scraped content is summary is: {summary}. If some of the scraped content agrees with the original content, what are the similarities? If some of the scraped content disagrees with the original content, what are the differences? Response in a paragraph without any markdown formatting."
     comparative_summary = talk_to_gemini(comparison_prompt, return_json=False)
 
     return comparative_summary
