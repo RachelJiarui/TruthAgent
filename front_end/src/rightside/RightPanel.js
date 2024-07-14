@@ -3,10 +3,18 @@ import ChatRoom from "./chatroom/ChatRoom";
 import { useState, useEffect } from "react";
 import WelcomeContextPage from "./WelcomeContextPage";
 import getMessagesFromDatabase from "../services/getMessagesFromDatabase";
+import NoAlertsPlaceholder from "./NoAlertsPlaceholder";
 
 // TODO: Fetch from database given url and aiAnalysis to retrieve all the messages associated for each alert
 // TODO: Once you get all the messages associated for the specific selectedAlertType, set messages to be the first one and set the tabs to be the titles of the other messages
-function RightPanel({ index, setIndex, selectedAlertType, url, aiAnalysis }) {
+function RightPanel({
+  index,
+  setIndex,
+  selectedAlertType,
+  url,
+  aiAnalysis,
+  viewStats,
+}) {
   const [messages, setMessages] = useState([]);
   const [focusSentence, setFocusSentence] = useState("");
   const [focusSentenceAIAnalysis, setFocusSentenceAIAnalysis] = useState("");
@@ -75,7 +83,7 @@ function RightPanel({ index, setIndex, selectedAlertType, url, aiAnalysis }) {
 
   return (
     <div className="rightpanel-space">
-      {url && selectedAlertType ? (
+      {url && selectedAlertType && !viewStats ? (
         aiAnalysis.webpage_annotations?.[alertTypeKey].length > 0 ? (
           <>
             <div className="top-part">
@@ -109,7 +117,7 @@ function RightPanel({ index, setIndex, selectedAlertType, url, aiAnalysis }) {
             />
           </>
         ) : (
-          <div>Hi</div>
+          <NoAlertsPlaceholder alertType={selectedAlertType} />
         )
       ) : (
         <WelcomeContextPage aiAnalysis={aiAnalysis} />

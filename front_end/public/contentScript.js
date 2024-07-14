@@ -39,31 +39,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     };
 
-    const redStyle = document.createElement("style");
-    redStyle.textContent = `
+    const styles = `
       .red-highlight {
-        background-color: red;
+        background-color: #ff9a9a; /* Red background with 30% opacity */
         display: inline;
+        position: relative;
+        text-decoration: underline;
+        text-decoration-color: red;
       }
-    `;
-    const orangeStyle = document.createElement("style");
-    orangeStyle.textContent = `
+
       .orange-highlight {
-        background-color: orange;
+        background-color:#ffd099;
         display: inline;
+        position: relative;
+        text-decoration: underline;
+        text-decoration-color: orange;
       }
-    `;
-    const blueStyle = document.createElement("style");
-    blueStyle.textContent = `
+
       .blue-highlight {
-        background-color: blue;
+        background-color: #9acdff; /* Blue background with 30% opacity */
         display: inline;
+        position: relative;
+        text-decoration: underline;
+        text-decoration-color: blue;
       }
     `;
 
-    document.head.appendChild(redStyle);
-    document.head.appendChild(blueStyle);
-    document.head.appendChild(orangeStyle);
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
 
     const alertToStyle = {
       red: "red-highlight",

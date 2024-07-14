@@ -15,6 +15,7 @@ function App() {
   const [aiAnalysis, setAIAnalysis] = useState("");
   const [url, setURL] = useState("");
   const [index, setIndex] = useState(0);
+  const [viewStats, setViewStats] = useState(true);
 
   useEffect(() => {
     // Test data set up
@@ -108,6 +109,7 @@ function App() {
               setSelectedAlertType={setSelectedAlertType}
               aiAnalysis={aiAnalysis}
               url={url}
+              setViewStats={setViewStats}
             />
           </div>
           <div className="right-panel">
@@ -117,6 +119,7 @@ function App() {
               url={url}
               setIndex={setIndex}
               index={index}
+              viewStats={viewStats}
             />
           </div>
         </div>

@@ -6,6 +6,7 @@ function Alert({
   selectedAlertType,
   setSelectedAlertType,
   setIndex,
+  setViewStats,
 }) {
   const alertStyle = {
     color: color,
@@ -14,6 +15,8 @@ function Alert({
   function handleClickAlert() {
     setIndex(0);
     setSelectedAlertType(title);
+    setViewStats(false);
+    console.log("Set view stats to false");
   }
 
   return (

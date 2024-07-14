@@ -11,8 +11,11 @@ function SideBar({
   selectedAlertType,
   setSelectedAlertType,
   aiAnalysis,
+  setViewStats,
 }) {
-  console.log(selectedAlertType);
+  function handleViewStats() {
+    setViewStats(true);
+  }
 
   return (
     <div className="side-bar">
@@ -24,6 +27,7 @@ function SideBar({
         setIndex={setIndex}
         selectedAlertType={selectedAlertType}
         setSelectedAlertType={setSelectedAlertType}
+        setViewStats={setViewStats}
       />
       <Alert
         title="Possible Misinformation"
@@ -32,6 +36,7 @@ function SideBar({
         setIndex={setIndex}
         selectedAlertType={selectedAlertType}
         setSelectedAlertType={setSelectedAlertType}
+        setViewStats={setViewStats}
       />
       <Alert
         title="Bias and Manipulation"
@@ -40,8 +45,11 @@ function SideBar({
         setIndex={setIndex}
         selectedAlertType={selectedAlertType}
         setSelectedAlertType={setSelectedAlertType}
+        setViewStats={setViewStats}
       />
-      <div className="side-bar-title view-stats">View Stats</div>
+      <div onClick={handleViewStats} className="side-bar-title view-stats">
+        View Stats
+      </div>
     </div>
   );
 }
