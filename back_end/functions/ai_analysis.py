@@ -48,6 +48,7 @@ def ai_analysis(url: str) -> dict:
         "author_analysis": author_analysis,
         "publisher_analysis": publisher_analysis,
         "date_analysis": date_analysis,
+        "body_content": body_content,
         "other_sources": other_sources,
         "other_sources_summary": external_summary,
         "webpage_annotations": webpage_annotations_analysis
@@ -101,6 +102,7 @@ def process_ai_analysis(raw_ai_analysis: dict, url: str):
         "main_idea": raw_ai_analysis["main_idea"],
         "date": raw_ai_analysis["date"],
         "author": raw_ai_analysis["author"],
+        "body_content": raw_ai_analysis["body_content"],
         "publisher": raw_ai_analysis["publisher"],
         "author_analysis": raw_ai_analysis["author_analysis"],
         "publisher_analysis": raw_ai_analysis["publisher_analysis"],
