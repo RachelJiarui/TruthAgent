@@ -33,7 +33,7 @@ def ai_analysis(url: str) -> dict:
     print(f"Processed date. Processing publisher from this text: {publisher}")
     publisher_analysis = process_publisher(publisher)
     print(f"Processed publishing details. Finding other sources with main idea: {main_idea}")
-    other_sources = find_other_sources(main_idea)
+    other_sources = find_other_sources(title, main_idea)
     print(f"Found other sources. Exploring these sources: {other_sources} given webpage content")
     external_summary = explore_sources(other_sources, body_content)
     print("Explored other sources. Analyzing the webpage given webpage content")

@@ -13,7 +13,9 @@ from functions.parse_webpage import parse_webpage
 from functions.parse_webpage import summarize_content
 from typing import List
 
-def find_other_sources(main_idea: str) -> dict:
+from functions.process_publishing import get_publishing_details
+
+def find_other_sources(original_title: str, main_idea: str) -> dict:
     '''
     Given a title or topic, return three other URL of sources that report on that title or topics.
     :param main_idea: Title of topic.
@@ -57,8 +59,9 @@ def find_other_sources(main_idea: str) -> dict:
     scraped_data = {}
     for link in links:
         content = parse_webpage(link)
-        if content:
-            scraped_data[link] = content
+        info = get_publishing_details(content)
+        if content and info and info["title"] and info["title"] != "No title" and info["title"] != original_title:
+            scraped_data[link] = (info["title"], content)
 
     return scraped_data
 

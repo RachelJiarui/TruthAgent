@@ -51,3 +51,26 @@
 .navigate {
     cursor: pointer;
 }
+
+.context-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.context-sources {
+    margin-bottom: 5px;
+    word-break: break-word;
+}
+
+.context-sources-url {
+    text-decoration: none;
+}
+
+.context-subtitle {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 600;
+}
