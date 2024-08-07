@@ -6,6 +6,7 @@ from functions.process_publishing import get_publishing_details
 from functions.explore_other_sources import find_other_sources, explore_sources
 import json
 from functions.webpage_analysis import webpage_annotations
+import random
 
 def ai_analysis(url: str) -> dict:
     '''
@@ -87,7 +88,11 @@ def process_ai_analysis(raw_ai_analysis: dict, url: str):
                         {
             				"sentence": sentence: str,
             				"ai_analysis": ai_analysis: str,
-            				"messages": []
+            				"messages": [{
+                                id: #,
+                                actor: "ai",
+                                msg: "What do you think?"
+                            }]
      			        }, ... for each (sentence: str, ai_analysis: str) in original
                     ]
               		"orange": ...
@@ -112,13 +117,16 @@ def process_ai_analysis(raw_ai_analysis: dict, url: str):
         "webpage_annotations": {}
     }
 
+    # AI starting message
+    ai_start_msg = { "id": random.random(), "actor": "ai", "msg": "What do you think?" }
+
     # Process webpage annotations
     for color, annotations in raw_ai_analysis["webpage_annotations"].items():
         processed_analysis["webpage_annotations"][color] = [
             {
                 "sentence": sentence,
                 "ai_analysis": ai_analysis,
-                "messages": []
+                "messages": [ai_start_msg]
             }
             for sentence, ai_analysis in annotations
         ]

@@ -32,9 +32,17 @@ function ChatRoom({
     setFormValue("");
 
     // send message over to AI
-    const prompt =
-      userMessage +
-      " - Response succinctly, like in a conversation, without any markdown formatting.";
+    let prompt =
+      "You are a AI thinking collaborator with the job of helping someone understand whether or not an exerpt from an article is misinformation or not. The exerpt is " +
+      focusSentence +
+      " and your belief is the following: " +
+      focusSentenceAIAnalysis +
+      ". Given the following conversation, with the first message being from you and the last message being from the user, either reason with the user to make the user believe your belief or, after challenging their thinking appropriately, agree with the user. Respond succinctly, like in a conversation, without any markdown formatting: \n";
+    for (let msg of messages) {
+      prompt += msg.actor + ": " + msg.msg + "\n";
+    }
+    console.log("Prompt sent to AI: ", prompt);
+
     const aiResponse = await getGeminiResp(prompt);
     if (aiResponse) {
       const updatedMessagesWithAI = [

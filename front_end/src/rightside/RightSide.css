@@ -74,3 +74,8 @@
     font-size: 14px;
     font-weight: 600;
 }
+
+.original-text {
+    border-left: 2px solid gray; /* Adjust the weight and color as needed */
+    padding-left: 10px;
+}

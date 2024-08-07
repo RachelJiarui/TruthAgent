@@ -91,7 +91,10 @@ function RightPanel({
                 <div className="navigate" onClick={goBack}>
                   Back
                 </div>
-                <div className="header">Logo</div>
+                <div className="header">
+                  Common Sense {index + 1}/
+                  {aiAnalysis.webpage_annotations?.[alertTypeKey].length}
+                </div>
                 <div className="navigate next" onClick={goNext}>
                   Next
                 </div>
@@ -103,8 +106,9 @@ function RightPanel({
                 >
                   {selectedAlertType}
                 </span>
-                {focusSentence}
+                Original text
               </div>
+              <div className="original-text">"{focusSentence}"</div>
               <div className="declaration">{focusSentenceAIAnalysis}</div>
             </div>
             <ChatRoom

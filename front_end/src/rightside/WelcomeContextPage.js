@@ -20,7 +20,7 @@ function WelcomeContextPage({ aiAnalysis }) {
           </div>
         ),
       )}
-      <div className="context-subtitle">Summary of Sources</div>
+      <div className="context-subtitle">Summary of Other Sources</div>
       <div>{aiAnalysis.other_sources_summary}</div>
     </div>
   );
