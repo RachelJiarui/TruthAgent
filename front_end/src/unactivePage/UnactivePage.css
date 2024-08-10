@@ -1,0 +1,82 @@
+.background-container {
+    background-image: url(".././images/thinker4.png");
+    /* Replace with your image path */
+    background-size: cover;
+    /* Ensures the image covers the entire div */
+    background-repeat: no-repeat;
+    /* Prevents the image from repeating */
+    height: 100vh;
+    /* Sets the height to fill the viewport */
+    width: 100%;
+    /* Ensures the width is 100% of the parent */
+}
+
+.epic-think-bubble-content {
+    max-width: 65%;
+    max-height: 80%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 15px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 16px;
+}
+
+/* Adjusting the position manually */
+.background-container.custom-position {
+    background-position: -250px -30%;
+    /* Moves the image 10% from the left and 90% from the top */
+}
+
+.epic {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 40px;
+    max-width: 180px;
+    text-align: center;
+}
+
+.epic-title {
+    font-size: 42px;
+    font-family: "Cinzel", serif;
+    color: #363838;
+    font-weight: bold;
+}
+
+.epic-desc {
+    font-size: 16px;
+    margin-bottom: 15px;
+    font-family: "Cinzel", serif;
+}
+
+.epic-think-bubble {
+    background-image: url(".././images/speechbubble.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    bottom: 280px;
+    display: flex;
+    justify-content: center; /* Centers text horizontally */
+    align-items: center; /* Centers text vertically */
+    height: 100px;
+    position: fixed;
+    right: 30px;
+    text-align: center; /* Centers text if it wraps to multiple lines */
+    width: 250px;
+}
+
+.start-button {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    font-family: "Times New Roman", Times, serif;
+    cursor: pointer;
+}
+
+.start-button:hover {
+    background-color: #363838; /* Darker shade of the background color */
+}

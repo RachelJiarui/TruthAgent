@@ -21,11 +21,11 @@ function RightPanel({
 
   const getAlertTypeColor = (type) => {
     switch (type) {
-      case "Blatant Misinformation":
+      case "Manipulation and Extreme Language":
         return "red";
       case "Possible Misinformation":
         return "orange";
-      case "Bias and Manipulation":
+      case "Complex Sentences":
         return "blue";
       default:
         return "black";
@@ -33,9 +33,9 @@ function RightPanel({
   };
 
   const selectTypeToKey = {
-    "Blatant Misinformation": "red",
+    "Manipulation and Extreme Language": "red",
     "Possible Misinformation": "orange",
-    "Bias and Manipulation": "blue",
+    "Complex Sentences": "blue",
   };
   const alertTypeKey = selectTypeToKey[selectedAlertType];
 

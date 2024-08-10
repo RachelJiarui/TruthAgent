@@ -118,7 +118,7 @@ def process_ai_analysis(raw_ai_analysis: dict, url: str):
     }
 
     # AI starting message
-    ai_start_msg = { "id": random.random(), "actor": "ai", "msg": "What do you think?" }
+    ai_start_msg = { "id": random.random(), "actor": "ai", "msg": "What do you think? Do you have any questions about the exerpt?" }
 
     # Process webpage annotations
     for color, annotations in raw_ai_analysis["webpage_annotations"].items():

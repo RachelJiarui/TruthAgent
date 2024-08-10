@@ -21,7 +21,7 @@ function SideBar({
     <div className="side-bar">
       <div className="side-bar-title">Alerts</div>
       <Alert
-        title="Blatant Misinformation"
+        title="Manipulation and Extreme Language"
         count={fetchRedAnnotations(aiAnalysis).length}
         color="#FF0000"
         setIndex={setIndex}
@@ -39,7 +39,7 @@ function SideBar({
         setViewStats={setViewStats}
       />
       <Alert
-        title="Bias and Manipulation"
+        title="Complex Sentences"
         count={fetchBlueAnnotations(aiAnalysis).length}
         color="#004AF9"
         setIndex={setIndex}

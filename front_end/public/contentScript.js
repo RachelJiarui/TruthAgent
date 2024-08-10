@@ -70,9 +70,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     document.head.appendChild(styleSheet);
 
     const alertToStyle = {
-      red: "red-highlight",
-      orange: "orange-highlight",
       blue: "blue-highlight",
+      orange: "orange-highlight",
+      red: "red-highlight",
     };
 
     const webAnnotations = aiInfo.webpage_annotations;

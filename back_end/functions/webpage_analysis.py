@@ -1,3 +1,4 @@
+from pickle import REDUCE
 from typing import Dict, List
 import nltk
 import re
@@ -55,15 +56,21 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
     orange_resp = talk_to_gemini(orange_prompt, return_json=True)
     print(f"Orange resp: {orange_resp}")
     orange_json = json.loads(orange_resp)
+    result["orange"] = orange_json["orange"]
 
     # Investigate orange flagged sentences
-    for red in orange_json["orange"]:
-        investigate_red = is_red(red[0])
-        if investigate_red[0]:
-            result["red"].append((red[0], investigate_red[1]))
-        else:
-            result["orange"].append(red)
-    result["orange"] = orange_json["orange"]
+    # for red in orange_json["orange"]:
+    #     investigate_red = is_red(red[0])
+    #     if investigate_red[0]:
+    #         result["red"].append((red[0], investigate_red[1]))
+    #     else:
+    #         result["orange"].append(red)
+
+    red_prompt = 'Given text, return a word or a phrase (avoid selecting a whole sentence) from the given text that is highly manipulative and uses extreme language. For each phrase or sentence you believe could be manipulative, pair it with a 1-2 sentence explanation of why. Each of these string pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "red": List[List[str]]] }. Here is the text: ' + text
+    red_resp = talk_to_gemini(red_prompt, return_json=True)
+    print(f"Red resp: {red_resp}")
+    red_json = json.loads(red_resp)
+    result["red"] = red_json["red"]
 
     blue_prompt = 'Given text, return a list of phrases or sentences from the given text that is politically charged or highly emotionally manipulative for a user. For each phrase or sentence you believe is politically charged or highly emotionally manipulative for a user, pair it with a 1-2 sentence explanation of why you believe so. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "blue": List[List[str]] }. Here is the text: ' + text
     new_blue_prompt = 'Given text, return a list of phrases or sentences from the given text that contains complicated topics or vocabulary for someone who has only received high school education and knows little outside context. For each phrase or sentence you believe is confusing or complex, pair it with a clear, concise and simple explanation of what this sentence means. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "blue": List[List[str]] }. Here is the text: ' + text

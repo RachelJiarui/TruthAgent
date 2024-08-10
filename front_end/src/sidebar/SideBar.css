@@ -11,7 +11,9 @@
     margin-right: 10px;
     margin-left: 10px;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 20px;
+    font-family: "Cinzel", serif;
+    font-weight: bold;
 }
 
 .context {
@@ -19,12 +21,12 @@
 }
 
 .context-text {
-    font-size: 16px;
+    font-size: 18px;
     color: black;
 }
 
 .click-for-more {
-    font-size: 12px;
+    font-size: 14px;
     font-style: italic;
 }
 
@@ -43,12 +45,12 @@
 }
 
 .alert-title {
-    font-size: 16px;
+    font-size: 18px;
     padding-bottom: 2px;
 }
 
 .learn-more {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .view-stats {

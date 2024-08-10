@@ -33,11 +33,11 @@ function ChatRoom({
 
     // send message over to AI
     let prompt =
-      "You are a AI thinking collaborator with the job of helping someone understand whether or not an exerpt from an article is misinformation or not. The exerpt is " +
+      "You are a AI thinking collaborator with the job of talking to someone about an article, what it means, and whether some parts of it is misinformation or manipulative or not. The exerpt from the article you two are analyzing is " +
       focusSentence +
-      " and your belief is the following: " +
+      " and your initial stance is the following: " +
       focusSentenceAIAnalysis +
-      ". Given the following conversation, with the first message being from you and the last message being from the user, either reason with the user to make the user believe your belief or, after challenging their thinking appropriately, agree with the user. Respond succinctly, like in a conversation, without any markdown formatting: \n";
+      ". I will give you the conversation you two have had with the first message being from you and the last message being from the user, continue the conversation. The user may ask you to explain your initial stance and ask for additional information outside of the article. Respond succinctly, with your knowledge not limited to the article or anything else, like in a conversation, without any markdown formatting: \n";
     for (let msg of messages) {
       prompt += msg.actor + ": " + msg.msg + "\n";
     }

@@ -1,9 +1,10 @@
 import "../App.css";
+import "./UnactivePage.css";
 /* global chrome */
 
 function StartButton({ setAIAnalysis, setError, setURL }) {
   async function handleButtonClick() {
-    setError("Fetching information...");
+    setError("Reading over your shoulder...");
 
     if (
       typeof chrome !== "undefined" &&
@@ -45,9 +46,9 @@ function StartButton({ setAIAnalysis, setError, setURL }) {
   }
 
   return (
-    <div>
-      <button onClick={handleButtonClick}>Read over my shoulder</button>
-    </div>
+    <button className="start-button" onClick={handleButtonClick}>
+      Digest page
+    </button>
   );
 }
 
