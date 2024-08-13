@@ -80,7 +80,7 @@ def explore_sources(external_urls_data: dict, original_source_content: str) -> s
     source_content_summary = summarize_content(original_source_content)
 
     # Compare the original content with the scraped content
-    comparison_prompt = f"Compare the sentiment and perspectives between two summaries. One summary contains the summary of the original article: {source_content_summary}. The other summary is the summary of multiple other sources reporting on the same topic as the original article: {summary}. What are the similarities between the two? What are the differences? Response in a clear, concise paragraph without any markdown formatting."
+    comparison_prompt = f"Compare the sentiment and perspectives between two summaries. One summary contains the summary of the original article (when referencing this summary, call it 'the article'): {source_content_summary}. The other summary is the summary of multiple other sources reporting on the same topic as the original article (when referencing this summary, call it 'the other sources'): {summary}. What are the similarities between the two? What are the differences? Response in a clear, concise paragraph without any markdown formatting."
     comparative_summary = talk_to_gemini(comparison_prompt, return_json=False)
 
     return comparative_summary

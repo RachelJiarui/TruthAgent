@@ -41,18 +41,7 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
         "blue": []
     }
 
-    # Variables helpful for testing
-    # len_sentences = len(sentences)
-    # count = -1
-    # for sentence in sentences:
-    #     count += 1
-    #     print(f"Analyzing sentence {count}/{len_sentences} for code red: {sentence}")
-    #     # If the sentence is disputed by verifiable facts
-    #     investigate_red = is_red(sentence)
-    #     if investigate_red[0]:
-    #         result["Red"].append((sentence, investigate_red[1]))
-
-    orange_prompt = 'Given text, return a list of phrases or sentences from the given text that is highly misleading (dont get stuck up on semantics or something nonconsequential) or could be straight misinformation. For each phrase or sentence you believe could be misleading or misinformation, pair it with a 1-2 sentence explanation of why you believe so. Each of these string pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "orange": List[List[str]]] }. Here is the text: ' + text
+    orange_prompt = 'Given text, return a list of phrases or sentences from the given text that is highly misleading (dont get stuck up on semantics or something nonconsequential) or could be straight misinformation. Do not over do it. For each phrase or sentence you believe could be misleading or misinformation, pair it with a 1-2 sentence explanation of why you believe so. Each of these string pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "orange": List[List[str]]] }. Here is the text: ' + text
     orange_resp = talk_to_gemini(orange_prompt, return_json=True)
     print(f"Orange resp: {orange_resp}")
     orange_json = json.loads(orange_resp)
@@ -66,16 +55,17 @@ def webpage_annotations(text: str) -> Dict[str, List[tuple[str, str]]]:
     #     else:
     #         result["orange"].append(red)
 
-    red_prompt = 'Given text, return a word or a phrase (avoid selecting a whole sentence) from the given text that is highly manipulative and uses extreme language. For each phrase or sentence you believe could be manipulative, pair it with a 1-2 sentence explanation of why. Each of these string pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "red": List[List[str]]] }. Here is the text: ' + text
+    red_prompt = 'Given text, return a word or a phrase (avoid selecting a whole sentence) from the given text that is highly manipulative and uses extreme language. Do not over do it. For each phrase or sentence you believe could be manipulative, pair it with a 1-2 sentence explanation of why. Each of these string pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "red": List[List[str]]] }. Here is the text: ' + text
     red_resp = talk_to_gemini(red_prompt, return_json=True)
     print(f"Red resp: {red_resp}")
     red_json = json.loads(red_resp)
     result["red"] = red_json["red"]
 
-    blue_prompt = 'Given text, return a list of phrases or sentences from the given text that is politically charged or highly emotionally manipulative for a user. For each phrase or sentence you believe is politically charged or highly emotionally manipulative for a user, pair it with a 1-2 sentence explanation of why you believe so. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "blue": List[List[str]] }. Here is the text: ' + text
-    new_blue_prompt = 'Given text, return a list of phrases or sentences from the given text that contains complicated topics or vocabulary for someone who has only received high school education and knows little outside context. For each phrase or sentence you believe is confusing or complex, pair it with a clear, concise and simple explanation of what this sentence means. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "blue": List[List[str]] }. Here is the text: ' + text
+    # blue_prompt = 'Given text, return a list of phrases or sentences from the given text that is politically charged or highly emotionally manipulative for a user.'
+    # new_blue_prompt = 'Given text, return a list of phrases or sentences from the given text that contains complicated topics or vocabulary for someone who has only received high school education and knows little outside context.'
+    blue_prompt ='Given text, return a list of phrases or sentences from the given text that mentions specific people, historical events, or other complex political, economical, cultural references that may require additional context for a typical reader of news. Do not over do it. For each phrase or sentence you believe is confusing or complex, pair it with a clear, concise and simple sentence providing the context needed. Each of these pairings forms a list of length 2. Put these lists of length 2 into a list and give me your findings in the form of a valid JSON object with the following structure: { "blue": List[List[str]] }. Here is the text: ' + text
     # instead of bias & manipulation, let's do complicated sentences
-    blue_resp = talk_to_gemini(new_blue_prompt, return_json=True)
+    blue_resp = talk_to_gemini(blue_prompt, return_json=True)
     print(f"blue resp: {blue_resp}")
     blue_json = json.loads(blue_resp)
     result["blue"] = blue_json["blue"]

@@ -19,14 +19,12 @@ function ChatRoom({
     e.preventDefault();
 
     let userMessage = formValue;
-    const updatedMessages = [
-      ...messages,
-      {
-        id: `${userMessage}-user-${Date.now()}`,
-        msg: userMessage,
-        actor: "user",
-      },
-    ];
+    const usgMsgDict = {
+      id: `${userMessage}-user-${Date.now()}`,
+      msg: userMessage,
+      actor: "user",
+    };
+    const updatedMessages = [...messages, usgMsgDict];
     setMessages(updatedMessages);
 
     setFormValue("");
@@ -41,6 +39,7 @@ function ChatRoom({
     for (let msg of messages) {
       prompt += msg.actor + ": " + msg.msg + "\n";
     }
+    prompt += "User: " + userMessage + "\n";
     console.log("Prompt sent to AI: ", prompt);
 
     const aiResponse = await getGeminiResp(prompt);

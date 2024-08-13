@@ -3,8 +3,9 @@ function WelcomeContextPage({ aiAnalysis }) {
   return (
     <div>
       <div className="context-title">{aiAnalysis.title}</div>
-      <div className="context-author">{aiAnalysis.author}</div>
-      <div className="context-publisher">{aiAnalysis.publisher}</div>
+      <div className="context-author">by {aiAnalysis.author}</div>
+      <div className="context-publisher">at {aiAnalysis.publisher}</div>
+      <div className="context-date">published {aiAnalysis.date_analysis}</div>
       <div className="context-subtitle">Other Sources</div>
       {Object.entries(aiAnalysis.other_sources).map(
         ([url, titleAndContent], index) => (

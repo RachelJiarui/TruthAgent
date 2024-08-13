@@ -71,3 +71,6 @@ def summarize_content(content: str, prompt="Summarize the content.", number_sent
     '''
     prompt = f'{prompt} Given these rules, summarize the given content into {number_sentences} sentence(s): "{content}"'
     return talk_to_gemini(prompt)
+
+# testing get HTML
+# print(get_HTML("https://www.foxnews.com/opinion/21-lines-get-people-think-about-fossil-fuels-balanced-way"))
